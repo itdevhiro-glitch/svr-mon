@@ -274,7 +274,7 @@ async function downloadReport(type,button){
     if(!rows.length)throw new Error("Tidak ada historical data untuk periode ini. Collector harus menulis servers/anastudio/history terlebih dahulu.");
     status.textContent=`Building professional dashboard + pivot summaries from ${rows.length.toLocaleString("id-ID")} samples...`;
     const wb=await buildWorkbook(period,rows,current),buffer=await wb.xlsx.writeBuffer(),blob=new Blob([buffer],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),url=URL.createObjectURL(blob),a=document.createElement("a"),stamp=new Date().toISOString().slice(0,10);
-    a.href=url;a.download=`AquaNova_ANASTUDIO_${period.label}_Professional_Report_${stamp}.xlsx`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    a.href=url;a.download=`${period.label}_Report_${stamp}.xlsx`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
     status.className="report-status success";status.textContent=`Professional report selesai: dashboard + pivot summaries + ${rows.length.toLocaleString("id-ID")} telemetry samples.`;toast(`${period.label} professional report berhasil dibuat`);
   }catch(e){console.error(e);status.className="report-status error";status.textContent=e.message||"Gagal membuat report.";}finally{button.disabled=false;button.textContent=oldText;}
 }
