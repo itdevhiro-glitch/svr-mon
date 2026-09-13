@@ -1,0 +1,13 @@
+Aqua Nova Studio - Hourly Report Schema Fix
+
+- Report now reads hourly aggregate history (cpu.avg/min/max, memory.avg/min/max,
+  temperature.avg/max, load avg/max, processes avg/max, network avg/peak/total).
+- Legacy snapshot history is still supported.
+- Missing metrics are blank / N/A instead of false 0.00.
+- Peak values use stored MAX values.
+- Daily AVG values are weighted by underlying 5-second sample counts.
+- Daily traffic totals use SUM.
+- Timestamps and filename date use Asia/Jakarta (WIB).
+- Dashboard sample count reflects underlying samples, not just hourly rows.
+- Current Root Disk uses current telemetry.
+- Historical Root Disk only appears if monitor.js stores it in hourly history.
