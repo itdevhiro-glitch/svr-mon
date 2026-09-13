@@ -72,6 +72,7 @@
         <button class="nav-item" data-section="network"><span>⌯</span> Network</button>
         <button class="nav-item" data-section="processes"><span>≋</span> Processes</button>
         <button class="nav-item" data-section="reports"><span>▤</span> Reports</button>
+        <button class="nav-item" data-section="backup"><span>↻</span> Backup & Recovery</button>
       </nav>
 
       <div class="sidebar-bottom">
@@ -182,6 +183,75 @@
           <article class="report-card panel"><div class="report-icon">M</div><div><span>MONTHLY REPORT</span><h3>Last 30 Days</h3><p>Monthly infrastructure performance summary for management and operations documentation.</p></div><button class="report-button" data-report="monthly">Download .xlsx</button></article>
         </div>
         <div id="reportStatus" class="report-status">Ready. Historical data must exist under <code>servers/anastudio/history</code>.</div>
+      </section>
+
+
+      <section id="backup" class="dashboard-section">
+        <div class="section-head backup-head">
+          <div>
+            <p class="panel-kicker">DATA PROTECTION</p>
+            <h3>Backup & Recovery Center</h3>
+            <p>Monitor backup mingguan, audit file yang tersalin, download log, cari file pada snapshot, dan restore file yang hilang ke lokasi aslinya.</p>
+          </div>
+          <button id="backupRunButton" class="backup-action primary">Run Backup Now</button>
+        </div>
+
+        <div class="backup-status-grid">
+          <article class="panel backup-progress-card">
+            <div class="panel-title"><div><p class="panel-kicker">CURRENT JOB</p><h3 id="backupState">IDLE</h3></div><span id="backupPhase">Waiting</span></div>
+            <div class="backup-percent"><strong id="backupPercent">0</strong><span>%</span></div>
+            <div class="backup-progress-track"><i id="backupProgressBar"></i></div>
+            <div class="backup-meta-grid">
+              <div><span>SOURCE</span><strong id="backupSource">—</strong></div>
+              <div><span>CURRENT FILE</span><strong id="backupCurrentFile">—</strong></div>
+              <div><span>TRANSFERRED</span><strong id="backupTransferred">—</strong></div>
+              <div><span>SPEED</span><strong id="backupSpeed">—</strong></div>
+              <div><span>STARTED</span><strong id="backupStarted">—</strong></div>
+              <div><span>UPDATED</span><strong id="backupUpdated">—</strong></div>
+            </div>
+          </article>
+
+          <article class="panel backup-summary-card">
+            <div class="panel-title"><div><p class="panel-kicker">POLICY</p><h3>Weekly Protection</h3></div></div>
+            <div class="backup-policy-list">
+              <div><span>Schedule</span><strong>Minggu · 01:50</strong></div>
+              <div><span>Sources</span><strong>/srv/aquanova + /mnt/gdrive</strong></div>
+              <div><span>Retention</span><strong id="backupRetention">8 snapshots</strong></div>
+              <div><span>Latest snapshot</span><strong id="backupLatestSnapshot">—</strong></div>
+              <div><span>Last result</span><strong id="backupLastResult">—</strong></div>
+            </div>
+            <button id="backupDownloadLog" class="backup-action">Download Latest Log</button>
+          </article>
+        </div>
+
+        <div class="chart-grid half-half">
+          <article class="panel table-panel">
+            <div class="panel-title"><div><p class="panel-kicker">RECENT ACTIVITY</p><h3>Files Processed</h3></div><span id="backupFileCount">0 files</span></div>
+            <div class="table-scroll backup-table-wrap"><table><thead><tr><th>Source</th><th>File</th><th>Size</th><th>Time</th></tr></thead><tbody id="backupRecentFiles"><tr><td colspan="4" class="empty-cell">Belum ada aktivitas backup.</td></tr></tbody></table></div>
+          </article>
+
+          <article class="panel table-panel">
+            <div class="panel-title"><div><p class="panel-kicker">SNAPSHOTS</p><h3>Backup History</h3></div><span>Weekly</span></div>
+            <div class="table-scroll backup-table-wrap"><table><thead><tr><th>Snapshot</th><th>Status</th><th>Files</th><th>Created</th></tr></thead><tbody id="backupHistory"><tr><td colspan="4" class="empty-cell">Belum ada snapshot.</td></tr></tbody></table></div>
+          </article>
+        </div>
+
+        <article class="panel backup-recovery-panel">
+          <div class="panel-title">
+            <div><p class="panel-kicker">FILE RECOVERY</p><h3>Search & Restore</h3><p>Cari nama/path file pada snapshot backup. Restore akan mengembalikan file ke path aslinya di server.</p></div>
+          </div>
+          <div class="backup-search-row">
+            <input id="backupSearchInput" type="search" placeholder="Contoh: host.xlsx atau Management/host.xlsx" />
+            <button id="backupSearchButton" class="backup-action primary">Search Backup</button>
+          </div>
+          <div id="backupRecoveryStatus" class="report-status">Masukkan nama file yang hilang untuk mencari snapshot terbaru.</div>
+          <div class="table-scroll backup-table-wrap"><table><thead><tr><th>Snapshot</th><th>Source</th><th>File</th><th>Size</th><th>Action</th></tr></thead><tbody id="backupSearchResults"><tr><td colspan="5" class="empty-cell">Belum ada pencarian.</td></tr></tbody></table></div>
+        </article>
+
+        <article class="panel table-panel backup-audit-panel">
+          <div class="panel-title"><div><p class="panel-kicker">RECOVERY AUDIT</p><h3>Restore Activity</h3></div><span>Admin only</span></div>
+          <div class="table-scroll"><table><thead><tr><th>Time</th><th>File</th><th>Snapshot</th><th>Status</th><th>Message</th></tr></thead><tbody id="backupRecoveryAudit"><tr><td colspan="5" class="empty-cell">Belum ada recovery.</td></tr></tbody></table></div>
+        </article>
       </section>
 
       <footer>© 2026 Aqua Nova Studio · Infrastructure Monitoring Console · <span id="footerClock"></span></footer>

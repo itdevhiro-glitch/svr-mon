@@ -81,3 +81,88 @@ The report generator creates `.xlsx` workbooks directly in the browser using Exc
 - Raw current Firebase snapshot
 
 If the UI says there is no historical data, update the server collector so it writes periodic samples to `servers/anastudio/history`.
+
+## Backup & Recovery Center
+
+Versi ini menambahkan menu **Backup & Recovery** untuk ANASTUDIO.
+
+Fitur:
+
+- Progress backup realtime (persentase, source, current file, transferred bytes, speed)
+- Backup `/srv/aquanova/` dan `/mnt/gdrive/`
+- Snapshot mingguan setiap Minggu 01:50
+- Retention default 8 snapshot
+- Incremental snapshot dengan hardlink `--link-dest`
+- Recent file activity
+- Snapshot history
+- Download latest backup log dari dashboard
+- Search file pada manifest backup
+- One-click recovery ke path asli
+- Recovery audit log
+- Manual **Run Backup Now** dari dashboard
+
+### Arsitektur keamanan
+
+Browser tidak memiliki akses shell/filesystem server. Dashboard hanya membuat request terbatas di Firebase:
+
+`servers/anastudio/backup/requests`
+
+`backup-agent.js` pada ANASTUDIO membaca request tersebut dengan Firebase Admin SDK. Hanya command `search`, `restore`, dan `runBackup` yang diterima. Path restore divalidasi agar tidak dapat keluar dari `/srv/aquanova` atau `/mnt/gdrive`.
+
+### Instalasi server
+
+Upload/copy folder `server/` ke ANASTUDIO, lalu:
+
+```bash
+cd server
+sudo ./install-backup-center.sh
+```
+
+Installer mengharapkan service account Firebase yang sudah dipakai monitoring berada di:
+
+```text
+/opt/anastudio-monitor/credentials/firebase-service-account.json
+```
+
+Setelah instalasi:
+
+```bash
+systemctl status aquanova-backup-controller.service --no-pager
+systemctl list-timers aquanova-backup.timer --no-pager
+```
+
+Start backup manual dari terminal (background):
+
+```bash
+sudo systemctl start --no-block aquanova-backup.service
+```
+
+Cek status:
+
+```bash
+systemctl is-active aquanova-backup.service
+```
+
+### Firebase rules
+
+Publish `database.rules.json` versi terbaru ke Firebase Realtime Database Rules. Rules tersebut tetap read-only untuk telemetry, tetapi mengizinkan `admin@ana.studio` menulis request ke Backup Center.
+
+### Catatan Google Drive
+
+Recovery ke source `gdrive` hanya dijalankan jika `/mnt/gdrive` sedang mounted. Restore ke `/mnt/gdrive/...` akan menulis file kembali ke mount Google Drive.
+
+## Backup & Recovery Dashboard
+Frontend ini hanya panel web dan aman untuk repository GitHub Pages. Eksekusi backup/recovery tidak dilakukan oleh GitHub; request dikirim melalui Firebase ke backend `anastudio` yang dipasang terpisah.
+
+Backend server tersedia sebagai paket terpisah `anastudio-backup-backend.zip`.
+
+Fitur panel:
+- status/progress backup,
+- current file dan recent files,
+- snapshot history,
+- download log terbaru,
+- pencarian file di 8 snapshot terakhir,
+- restore file ke lokasi asal,
+- run backup manual.
+
+`database.rules.json` di repository ini perlu dipublish ke Firebase Realtime Database Rules agar akun admin dapat membuat request backup/recovery.

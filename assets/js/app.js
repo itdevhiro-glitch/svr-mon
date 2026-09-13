@@ -1,6 +1,7 @@
 import { initAuth } from "./auth.js";
 import { startDashboard, stopDashboard } from "./dashboard.js";
 import { initReports } from "./reports.js";
+import { initBackupCenter, stopBackupCenter } from "./backup.js";
 import { $, fmtClock } from "./utils.js";
 
 function initNavigation() {
@@ -22,4 +23,4 @@ function initClock() {
 initNavigation();
 initReports();
 initClock();
-initAuth(() => startDashboard(), () => stopDashboard());
+initAuth(() => { startDashboard(); initBackupCenter(); }, () => { stopDashboard(); stopBackupCenter(); });

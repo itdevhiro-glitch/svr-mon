@@ -6,6 +6,12 @@
         ".write": false,
         "history": {
           ".indexOn": ["timestamp"]
+        },
+        "backup": {
+          "requests": {
+            ".write": "auth != null && auth.token.email === 'admin@ana.studio'",
+            ".indexOn": ["status", "createdAt"]
+          }
         }
       }
     }
