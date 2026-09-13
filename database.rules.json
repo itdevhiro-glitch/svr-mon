@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "servers": {
+      "$serverId": {
+        ".read": "auth != null && auth.token.email === 'admin@ana.studio'",
+        ".write": false,
+        "history": {
+          ".indexOn": ["timestamp"]
+        }
+      }
+    }
+  }
+}

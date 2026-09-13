@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="description" content="Aqua Nova Studio Infrastructure Monitoring Dashboard" />
+  <title>Aqua Nova Studio — Infrastructure Monitor</title>
+  <link rel="icon" href="assets/img/aquanova-logo.png" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
+  <script type="module" src="assets/js/app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <section id="loginView" class="login-view">
+    <div class="login-shell">
+      <div class="login-brand">
+        <img src="assets/img/aquanova-logo.png" alt="Aqua Nova Studio" class="login-logo" />
+        <div>
+          <p class="eyebrow">AQUA NOVA STUDIO</p>
+          <h1>Infrastructure<br />Observability</h1>
+          <p class="login-copy">Private monitoring console for server health, capacity, services, networking, and operational reports.</p>
+        </div>
+        <div class="login-points">
+          <div><span>01</span> Realtime telemetry</div>
+          <div><span>02</span> Historical analytics</div>
+          <div><span>03</span> Excel operations report</div>
+        </div>
+      </div>
+
+      <form id="loginForm" class="login-card" autocomplete="on">
+        <div class="login-card-head">
+          <span class="status-dot"></span>
+          <span>SECURE ADMIN ACCESS</span>
+        </div>
+        <h2>Sign in</h2>
+        <p>Gunakan akun Firebase Authentication yang diizinkan.</p>
+
+        <label for="email">Email</label>
+        <input id="email" type="email" value="admin@ana.studio" autocomplete="username" required />
+
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input id="password" type="password" placeholder="••••••••••••" autocomplete="current-password" required />
+          <button id="togglePassword" class="ghost-icon" type="button" aria-label="Tampilkan password">SHOW</button>
+        </div>
+
+        <button id="loginButton" class="primary-button" type="submit">
+          <span>Authenticate</span><span>→</span>
+        </button>
+        <div id="loginError" class="login-error" role="alert"></div>
+        <p class="login-foot">Only <strong>admin@ana.studio</strong> is allowed by this dashboard.</p>
+      </form>
+    </div>
+  </section>
+
+  <div id="appView" class="app-view hidden">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <img src="assets/img/aquanova-logo.png" alt="Aqua Nova" />
+        <div><strong>AQUA NOVA</strong><span>OPS CONSOLE</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-section="overview"><span>◫</span> Overview</button>
+        <button class="nav-item" data-section="compute"><span>⌁</span> Compute</button>
+        <button class="nav-item" data-section="storage"><span>▱</span> Storage</button>
+        <button class="nav-item" data-section="network"><span>⌯</span> Network</button>
+        <button class="nav-item" data-section="processes"><span>≋</span> Processes</button>
+        <button class="nav-item" data-section="reports"><span>▤</span> Reports</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="mini-status">
+          <span id="sideStatusDot" class="dot"></span>
+          <div><strong id="sideStatus">UNKNOWN</strong><small id="sideHeartbeat">No heartbeat</small></div>
+        </div>
+        <button id="logoutButton" class="logout-button">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">INFRASTRUCTURE / <span id="sectionLabel">OVERVIEW</span></p>
+          <h2 id="pageTitle">ANASTUDIO Control Center</h2>
+        </div>
+        <div class="topbar-actions">
+          <div class="sync-chip"><span class="pulse"></span><span id="lastSync">Waiting for data</span></div>
+          <div class="user-chip"><div class="avatar">A</div><div><strong>Administrator</strong><span>admin@ana.studio</span></div></div>
+        </div>
+      </header>
+
+      <section id="overview" class="dashboard-section active-section">
+        <div id="globalAlert" class="global-alert hidden"></div>
+        <div class="hero-grid">
+          <article class="server-hero panel">
+            <div class="hero-top">
+              <div>
+                <p class="panel-kicker">PRIMARY NODE</p>
+                <h3 id="serverName">ANASTUDIO</h3>
+                <span id="serverOs">Loading operating system…</span>
+              </div>
+              <div id="serverStateBadge" class="state-badge unknown">UNKNOWN</div>
+            </div>
+            <div class="server-meta-grid">
+              <div><span>HOSTNAME</span><strong id="hostname">—</strong></div>
+              <div><span>UPTIME</span><strong id="uptime">—</strong></div>
+              <div><span>LAST HEARTBEAT</span><strong id="heartbeat">—</strong></div>
+              <div><span>KERNEL</span><strong id="kernel">—</strong></div>
+            </div>
+          </article>
+
+          <article class="health-score panel">
+            <p class="panel-kicker">HEALTH INDEX</p>
+            <div class="health-ring" id="healthRing"><div><strong id="healthScore">--</strong><span>/ 100</span></div></div>
+            <p id="healthText">Waiting for telemetry</p>
+          </article>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric-card"><div class="metric-head"><span>CPU LOAD</span><b id="cpuTrend">LIVE</b></div><div class="metric-value"><strong id="cpuUsage">--</strong><span>%</span></div><div class="progress"><i id="cpuBar"></i></div><small id="cpuSub">—</small></article>
+          <article class="metric-card"><div class="metric-head"><span>MEMORY</span><b>RAM</b></div><div class="metric-value"><strong id="ramUsage">--</strong><span>%</span></div><div class="progress"><i id="ramBar"></i></div><small id="ramSub">—</small></article>
+          <article class="metric-card"><div class="metric-head"><span>ROOT STORAGE</span><b>DISK</b></div><div class="metric-value"><strong id="diskUsage">--</strong><span>%</span></div><div class="progress"><i id="diskBar"></i></div><small id="diskSub">—</small></article>
+          <article class="metric-card"><div class="metric-head"><span>CPU TEMP</span><b>SENSOR</b></div><div class="metric-value"><strong id="cpuTemp">--</strong><span>°C</span></div><div class="progress"><i id="tempBar"></i></div><small id="tempSub">Temperature sensor</small></article>
+          <article class="metric-card"><div class="metric-head"><span>PROCESSES</span><b>OS</b></div><div class="metric-value"><strong id="processTotal">--</strong></div><div class="metric-inline"><span>Running</span><strong id="processRunning">—</strong></div><small id="processSub">System process count</small></article>
+          <article class="metric-card"><div class="metric-head"><span>NETWORK</span><b>THROUGHPUT</b></div><div class="network-pair"><div><span>↓ RX</span><strong id="networkRx">—</strong></div><div><span>↑ TX</span><strong id="networkTx">—</strong></div></div><small id="networkIface">Interface —</small></article>
+        </div>
+
+        <div class="chart-grid two-one">
+          <article class="panel chart-panel"><div class="panel-title"><div><p class="panel-kicker">UTILIZATION</p><h3>CPU & Memory</h3></div><span>Realtime</span></div><div class="chart-wrap"><canvas id="usageChart"></canvas></div></article>
+          <article class="panel"><div class="panel-title"><div><p class="panel-kicker">SYSTEM LOAD</p><h3>Load Average</h3></div></div><div class="load-bars"><div><span>1 MIN</span><strong id="load1">—</strong><i><b id="load1Bar"></b></i></div><div><span>5 MIN</span><strong id="load5">—</strong><i><b id="load5Bar"></b></i></div><div><span>15 MIN</span><strong id="load15">—</strong><i><b id="load15Bar"></b></i></div></div></article>
+        </div>
+
+        <div class="chart-grid half-half">
+          <article class="panel chart-panel"><div class="panel-title"><div><p class="panel-kicker">TRAFFIC</p><h3>Network Throughput</h3></div><span>RX / TX</span></div><div class="chart-wrap small"><canvas id="networkChart"></canvas></div></article>
+          <article class="panel"><div class="panel-title"><div><p class="panel-kicker">SERVICE HEALTH</p><h3>Core Services</h3></div><span id="serviceCount">0 monitored</span></div><div id="serviceGrid" class="service-grid"><div class="empty-state">Waiting for service metrics.</div></div></article>
+        </div>
+      </section>
+
+      <section id="compute" class="dashboard-section">
+        <div class="section-head"><div><p class="panel-kicker">COMPUTE LAYER</p><h3>Processor & Memory Detail</h3></div></div>
+        <div class="detail-grid">
+          <article class="panel detail-card"><span>CPU MODEL</span><strong id="cpuModel">—</strong><small id="cpuCores">—</small></article>
+          <article class="panel detail-card"><span>CPU FREQUENCY</span><strong id="cpuFrequency">—</strong><small>Current / reported average</small></article>
+          <article class="panel detail-card"><span>MEMORY TOTAL</span><strong id="memoryTotal">—</strong><small id="memoryAvailable">—</small></article>
+          <article class="panel detail-card"><span>SWAP</span><strong id="swapUsed">—</strong><small id="swapTotal">—</small></article>
+        </div>
+        <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">PER-CORE TELEMETRY</p><h3>CPU Cores</h3></div></div><div id="coreGrid" class="core-grid"><div class="empty-state">Per-core metrics belum tersedia pada collector.</div></div></article>
+      </section>
+
+      <section id="storage" class="dashboard-section">
+        <div class="section-head"><div><p class="panel-kicker">STORAGE LAYER</p><h3>Filesystem Capacity</h3></div></div>
+        <article class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
+      </section>
+
+      <section id="network" class="dashboard-section">
+        <div class="section-head"><div><p class="panel-kicker">NETWORK LAYER</p><h3>Interfaces & Traffic</h3></div></div>
+        <article class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Interface</th><th>RX Total</th><th>TX Total</th><th>RX Rate</th><th>TX Rate</th><th>Errors</th><th>Dropped</th></tr></thead><tbody id="networkTable"><tr><td colspan="7" class="empty-cell">Waiting for network metrics.</td></tr></tbody></table></div></article>
+      </section>
+
+      <section id="processes" class="dashboard-section">
+        <div class="section-head"><div><p class="panel-kicker">PROCESS LAYER</p><h3>Process Overview</h3></div></div>
+        <div class="detail-grid">
+          <article class="panel detail-card"><span>TOTAL</span><strong id="procTotal2">—</strong><small>All processes</small></article>
+          <article class="panel detail-card"><span>RUNNING</span><strong id="procRunning2">—</strong><small>Active processes</small></article>
+          <article class="panel detail-card"><span>SLEEPING</span><strong id="procSleeping2">—</strong><small>Sleeping processes</small></article>
+          <article class="panel detail-card"><span>BLOCKED</span><strong id="procBlocked2">—</strong><small>Blocked processes</small></article>
+        </div>
+        <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">TOP PROCESSES</p><h3>CPU Consumers</h3></div></div><div class="table-scroll"><table><thead><tr><th>PID</th><th>Name</th><th>CPU</th><th>Memory</th><th>State</th></tr></thead><tbody id="processTable"><tr><td colspan="5" class="empty-cell">Top-process metrics belum tersedia pada collector.</td></tr></tbody></table></div></article>
+      </section>
+
+      <section id="reports" class="dashboard-section">
+        <div class="section-head report-heading"><div><p class="panel-kicker">OPERATIONS REPORTING</p><h3>Export Professional Excel Reports</h3><p>Report mengambil data historical dari Firebase Realtime Database dan menghasilkan workbook .xlsx dengan executive summary, KPI, detail telemetry, dan raw data.</p></div></div>
+        <div class="report-grid">
+          <article class="report-card panel"><div class="report-icon">D</div><div><span>DAILY REPORT</span><h3>Last 24 Hours</h3><p>Operational snapshot, uptime evidence, resource utilization, storage, traffic, and incident indicators.</p></div><button class="report-button" data-report="daily">Download .xlsx</button></article>
+          <article class="report-card panel"><div class="report-icon">W</div><div><span>WEEKLY REPORT</span><h3>Last 7 Days</h3><p>Capacity and stability analysis across the previous seven days with averages, peaks, and trends.</p></div><button class="report-button" data-report="weekly">Download .xlsx</button></article>
+          <article class="report-card panel"><div class="report-icon">M</div><div><span>MONTHLY REPORT</span><h3>Last 30 Days</h3><p>Monthly infrastructure performance summary for management and operations documentation.</p></div><button class="report-button" data-report="monthly">Download .xlsx</button></article>
+        </div>
+        <div id="reportStatus" class="report-status">Ready. Historical data must exist under <code>servers/anastudio/history</code>.</div>
+      </section>
+
+      <footer>© 2026 Aqua Nova Studio · Infrastructure Monitoring Console · <span id="footerClock"></span></footer>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</body>
+</html>
