@@ -7,10 +7,10 @@
   <meta name="description" content="Aqua Nova Studio Infrastructure Monitoring Dashboard" />
   <title>Aqua Nova Studio — Infrastructure Monitor</title>
   <link rel="icon" href="assets/img/aquanova-logo.png" />
-  <link rel="stylesheet" href="assets/css/style.css?v=20260916-storage-v5" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20260916-storage-v6" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
-  <script type="module" src="assets/js/app.js?v=20260916-storage-v5"></script>
+  <script type="module" src="assets/js/app.js?v=20260916-storage-v6"></script>
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -175,7 +175,7 @@
           <button class="storage-workspace-tab" type="button" data-storage-jump="audit"><span>≡</span><b>Audit</b><small>Activity stream</small></button>
         </div>
 
-        <article id="storagePathsWorkspace" class="panel storage-manager storage-workspace-panel">
+        <article id="storagePathsWorkspace" class="panel storage-manager storage-workspace-panel storage-panel-active">
           <div class="storage-panel-header"><div><p class="panel-kicker">MANAGED PATHS</p><h3>ANASTUDIO Storage Paths</h3><p>Live directories discovered below the approved storage root.</p></div><div class="storage-panel-actions"><span class="source-chip">SERVER SOURCE</span><button type="button" disabled title="Management API belum aktif">Edit Path</button></div></div>
           <div id="managedPathList" class="managed-path-list"><div class="empty-state large-empty"><b>Path Management backend belum aktif.</b><span>Waiting for ANASTUDIO storage discovery.</span></div></div>
         </article>
@@ -196,7 +196,7 @@
           </article>
         </div>
 
-        <article class="panel table-panel storage-workspace-panel storage-filesystem-panel"><div class="storage-panel-header"><div><p class="panel-kicker">FILESYSTEM TELEMETRY</p><h3>Physical Filesystems</h3><p>Capacity and utilization from existing monitoring.</p></div><span class="source-chip">LIVE TELEMETRY</span></div><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
+        <article id="storageFilesystemWorkspace" class="panel table-panel storage-workspace-panel storage-filesystem-panel storage-panel-active"><div class="storage-panel-header"><div><p class="panel-kicker">FILESYSTEM TELEMETRY</p><h3>Physical Filesystems</h3><p>Capacity and utilization from existing monitoring.</p></div><span class="source-chip">LIVE TELEMETRY</span></div><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
 
         <article id="storageAuditWorkspace" class="panel table-panel storage-workspace-panel storage-audit-panel"><div class="storage-panel-header"><div><p class="panel-kicker">AUDIT & ACTIVITY</p><h3>Storage Audit Stream</h3><p>Create, modify, move, permission and identity events will appear here.</p></div><span class="pending-chip">COLLECTOR PENDING</span></div><div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Event</th><th>Source</th><th>Target</th><th>Result</th></tr></thead><tbody><tr><td colspan="6" class="empty-cell">Advanced file activity will appear after the audit backend is enabled.</td></tr></tbody></table></div></article>
       </section>
