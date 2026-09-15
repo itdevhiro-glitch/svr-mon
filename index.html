@@ -162,18 +162,43 @@
         <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">PER-CORE TELEMETRY</p><h3>CPU Cores</h3></div></div><div id="coreGrid" class="core-grid"><div class="empty-state">Per-core metrics belum tersedia pada collector.</div></div></article>
       </section>
 
-      <section id="storage" class="dashboard-section">
-        <div class="section-head storage-head"><div><p class="panel-kicker">STORAGE & ACCESS</p><h3>Path Management</h3><p>Path, policy, ACL, Samba access, quota and audit data are supplied by the ANASTUDIO management backend. The frontend does not define server paths or identities.</p></div><span id="storageManagementState" class="backend-state">WAITING FOR SERVER</span></div>
-        <article class="panel storage-manager">
-          <div class="panel-title"><div><p class="panel-kicker">MANAGED PATHS</p><h3>ANASTUDIO Storage Paths</h3></div><span>Backend source of truth</span></div>
-          <div id="managedPathList" class="managed-path-list"><div class="empty-state large-empty"><b>Path Management backend belum aktif.</b><span>Path aktual akan dibaca dari server di bawah approved root /srv/aquanova setelah Storage Path API diaktifkan. Tidak ada path, quota, ACL, user, group, atau SMB share yang di-hardcode di frontend.</span></div></div>
-        </article>
-        <div class="chart-grid half-half">
-          <article class="panel management-panel access-live-panel"><div class="panel-title"><div><p class="panel-kicker">ACCESS CONTROL</p><h3>Users & Groups</h3></div><span id="accessState" class="live-mini-state">WAITING</span></div><div id="accessSummary" class="access-summary"></div><div id="accessUserList" class="access-user-list"><div class="empty-state"><b>Waiting for access discovery.</b><span>Linux identities, groups and Samba account state are loaded from ANASTUDIO.</span></div></div></article>
-          <article class="panel management-panel smb-live-panel"><div class="panel-title"><div><p class="panel-kicker">PRIVATE NETWORK</p><h3>SMB Access Generator</h3></div><span id="smbState" class="live-mini-state">WAITING</span></div><div class="vpn-warning"><b>VPN CONNECTION REQUIRED</b><span>Authorized ZeroTier access is required for private SMB storage.</span></div><div id="smbBackendInfo" class="smb-backend-info"></div><div class="smb-form"><label class="field-label" for="smbPathSelect">STORAGE PATH</label><select id="smbPathSelect" class="management-select" disabled><option>Waiting for backend…</option></select><label class="field-label" for="smbUserSelect">ACCESS AS</label><select id="smbUserSelect" class="management-select" disabled><option>Effective access backend pending</option></select><div class="copy-address"><code id="smbAddress">Authorization mapping required</code><button id="copySmbAddress" type="button" disabled>Copy</button></div><small id="smbHint">User/path authorization will not be guessed by the frontend.</small></div></article>
+      <section id="storage" class="dashboard-section storage-console">
+        <div class="section-head storage-head storage-command-head">
+          <div><p class="panel-kicker">INFRASTRUCTURE / STORAGE</p><h3>Storage Control Center</h3><p>Kelola storage paths, identity, access control dan private SMB dari satu workspace. Data live tetap berasal dari ANASTUDIO.</p></div>
+          <div class="storage-head-actions"><span id="storageManagementState" class="backend-state">WAITING FOR SERVER</span><button class="storage-primary-action" type="button" disabled title="Management API belum aktif">＋ New Path</button></div>
         </div>
-        <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">FILESYSTEM TELEMETRY</p><h3>Physical Filesystems</h3></div><span>Existing monitoring</span></div><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
-        <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">FILE ACTIVITY</p><h3>Storage Audit Stream</h3></div><span>Collector pending</span></div><div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Event</th><th>Source</th><th>Target</th><th>Result</th></tr></thead><tbody><tr><td colspan="6" class="empty-cell">Advanced file activity will appear after the audit backend is enabled.</td></tr></tbody></table></div></article>
+
+        <div class="storage-workspace-nav" aria-label="Storage workspace">
+          <button class="storage-workspace-tab active" type="button" data-storage-jump="paths"><span>▰</span><b>Paths</b><small>Capacity & filesystem</small></button>
+          <button class="storage-workspace-tab" type="button" data-storage-jump="identities"><span>◎</span><b>Users & Groups</b><small>Identity & membership</small></button>
+          <button class="storage-workspace-tab" type="button" data-storage-jump="smb"><span>↗</span><b>SMB Access</b><small>Private network</small></button>
+          <button class="storage-workspace-tab" type="button" data-storage-jump="audit"><span>≡</span><b>Audit</b><small>Activity stream</small></button>
+        </div>
+
+        <article id="storagePathsWorkspace" class="panel storage-manager storage-workspace-panel">
+          <div class="storage-panel-header"><div><p class="panel-kicker">MANAGED PATHS</p><h3>ANASTUDIO Storage Paths</h3><p>Live directories discovered below the approved storage root.</p></div><div class="storage-panel-actions"><span class="source-chip">SERVER SOURCE</span><button type="button" disabled title="Management API belum aktif">Edit Path</button></div></div>
+          <div id="managedPathList" class="managed-path-list"><div class="empty-state large-empty"><b>Path Management backend belum aktif.</b><span>Waiting for ANASTUDIO storage discovery.</span></div></div>
+        </article>
+
+        <div class="storage-control-grid">
+          <article id="storageIdentityWorkspace" class="panel management-panel access-live-panel storage-workspace-panel">
+            <div class="storage-panel-header"><div><p class="panel-kicker">IDENTITY & ACCESS</p><h3>Users & Groups</h3><p>Linux identities, Samba state and group membership.</p></div><div class="storage-panel-actions"><span id="accessState" class="live-mini-state">WAITING</span><button type="button" disabled title="Management API belum aktif">＋ Add User</button></div></div>
+            <div id="accessSummary" class="access-summary"></div>
+            <div class="storage-list-toolbar"><span>Server identities</span><div><button type="button" disabled>Edit</button><button type="button" disabled>Permissions</button></div></div>
+            <div id="accessUserList" class="access-user-list"><div class="empty-state"><b>Waiting for access discovery.</b><span>Linux identities, groups and Samba account state are loaded from ANASTUDIO.</span></div></div>
+          </article>
+
+          <article id="storageSmbWorkspace" class="panel management-panel smb-live-panel storage-workspace-panel">
+            <div class="storage-panel-header"><div><p class="panel-kicker">PRIVATE NETWORK</p><h3>SMB Access</h3><p>Generate private storage addresses only for authorized identities.</p></div><span id="smbState" class="live-mini-state">WAITING</span></div>
+            <div class="vpn-warning"><b>ZEROTIER REQUIRED</b><span>Connect to the authorized Aqua Nova private network before opening SMB storage.</span></div>
+            <div id="smbBackendInfo" class="smb-backend-info"></div>
+            <div class="smb-form"><label class="field-label" for="smbPathSelect">STORAGE PATH</label><select id="smbPathSelect" class="management-select" disabled><option>Waiting for backend…</option></select><label class="field-label" for="smbUserSelect">ACCESS AS</label><select id="smbUserSelect" class="management-select" disabled><option>Effective access backend pending</option></select><div class="copy-address"><code id="smbAddress">Authorization mapping required</code><button id="copySmbAddress" type="button" disabled>Copy</button></div><small id="smbHint">User/path authorization will not be guessed by the frontend.</small></div>
+          </article>
+        </div>
+
+        <article class="panel table-panel storage-workspace-panel storage-filesystem-panel"><div class="storage-panel-header"><div><p class="panel-kicker">FILESYSTEM TELEMETRY</p><h3>Physical Filesystems</h3><p>Capacity and utilization from existing monitoring.</p></div><span class="source-chip">LIVE TELEMETRY</span></div><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
+
+        <article id="storageAuditWorkspace" class="panel table-panel storage-workspace-panel storage-audit-panel"><div class="storage-panel-header"><div><p class="panel-kicker">AUDIT & ACTIVITY</p><h3>Storage Audit Stream</h3><p>Create, modify, move, permission and identity events will appear here.</p></div><span class="pending-chip">COLLECTOR PENDING</span></div><div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Event</th><th>Source</th><th>Target</th><th>Result</th></tr></thead><tbody><tr><td colspan="6" class="empty-cell">Advanced file activity will appear after the audit backend is enabled.</td></tr></tbody></table></div></article>
       </section>
 
       <section id="network" class="dashboard-section">

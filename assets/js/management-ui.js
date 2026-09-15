@@ -8,3 +8,13 @@ export function initManagementUI(){
   document.querySelectorAll('.nav-item').forEach(x=>x.addEventListener('click',close));
   document.getElementById('alertBell')?.addEventListener('click',()=>document.querySelector('.nav-item[data-section="alerts"]')?.click());
 }
+
+// Storage workspace quick navigation (presentation only; privileged actions stay backend-gated).
+document.querySelectorAll('[data-storage-jump]').forEach((button)=>{
+  button.addEventListener('click',()=>{
+    document.querySelectorAll('[data-storage-jump]').forEach(x=>x.classList.remove('active'));
+    button.classList.add('active');
+    const map={paths:'storagePathsWorkspace',identities:'storageIdentityWorkspace',smb:'storageSmbWorkspace',audit:'storageAuditWorkspace'};
+    document.getElementById(map[button.dataset.storageJump])?.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
