@@ -59,6 +59,8 @@
   </section>
 
   <div id="appView" class="app-view hidden">
+    <button id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
+    <div id="mobileNavBackdrop" class="mobile-nav-backdrop"></div>
     <aside class="sidebar">
       <div class="brand-box">
         <img src="assets/img/aquanova-logo.png" alt="Aqua Nova" />
@@ -73,6 +75,7 @@
         <button class="nav-item" data-section="processes"><span>≋</span> Processes</button>
         <button class="nav-item" data-section="reports"><span>▤</span> Reports</button>
         <button class="nav-item" data-section="backup"><span>↻</span> Backup & Recovery</button>
+        <button class="nav-item" data-section="alerts"><span>!</span> Alerts & Logs <b class="nav-alert-badge">0</b></button>
       </nav>
 
       <div class="sidebar-bottom">
@@ -91,6 +94,7 @@
           <h2 id="pageTitle">ANASTUDIO Control Center</h2>
         </div>
         <div class="topbar-actions">
+          <button id="alertBell" class="alert-bell" type="button" title="Alerts & Logs">!<span id="alertBellCount">0</span></button>
           <div class="sync-chip"><span class="pulse"></span><span id="lastSync">Waiting for data</span></div>
           <div class="user-chip"><div class="avatar">A</div><div><strong>Administrator</strong><span>admin@ana.studio</span></div></div>
         </div>
@@ -151,12 +155,36 @@
           <article class="panel detail-card"><span>MEMORY TOTAL</span><strong id="memoryTotal">—</strong><small id="memoryAvailable">—</small></article>
           <article class="panel detail-card"><span>SWAP</span><strong id="swapUsed">—</strong><small id="swapTotal">—</small></article>
         </div>
+        <article class="panel ssh-entry-card">
+          <div><p class="panel-kicker">SECURE OPERATIONS</p><h3>Remote SSH Workspace</h3><p>Open the dedicated ANASTUDIO SSH workspace. Re-authentication, email security code and server-side authorization will be required when the SSH backend is enabled.</p></div>
+          <div class="ssh-entry-actions"><span class="secure-chip">SECURITY GATEWAY</span><a class="primary-link-button" href="ssh/ssh.html" target="_blank" rel="noopener">&gt;_ Open Remote SSH</a></div>
+        </article>
         <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">PER-CORE TELEMETRY</p><h3>CPU Cores</h3></div></div><div id="coreGrid" class="core-grid"><div class="empty-state">Per-core metrics belum tersedia pada collector.</div></div></article>
       </section>
 
       <section id="storage" class="dashboard-section">
-        <div class="section-head"><div><p class="panel-kicker">STORAGE LAYER</p><h3>Filesystem Capacity</h3></div></div>
-        <article class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
+        <div class="section-head storage-head"><div><p class="panel-kicker">STORAGE & ACCESS</p><h3>Path Management</h3><p>Manage approved Aqua Nova storage paths, access policies, Samba exposure and capacity policies. Privileged actions remain unavailable until the management backend is enabled.</p></div><button class="management-button" data-demo-action="Create Path">+ New Path</button></div>
+        <div class="storage-summary-grid">
+          <article class="panel summary-tile"><span>MANAGED ROOT</span><strong>/srv/aquanova</strong><small>Protected management scope</small></article>
+          <article class="panel summary-tile"><span>PATH POLICIES</span><strong>Path-based</strong><small>Fixed · Auto Grow · No Quota</small></article>
+          <article class="panel summary-tile"><span>NETWORK ACCESS</span><strong>SMB + ZeroTier</strong><small>Private access only</small></article>
+          <article class="panel summary-tile"><span>AUDIT</span><strong>Prepared</strong><small>Backend integration pending</small></article>
+        </div>
+        <article class="panel storage-manager">
+          <div class="panel-title"><div><p class="panel-kicker">MANAGED PATHS</p><h3>Aqua Nova Storage</h3></div><span>Per-path capacity</span></div>
+          <div class="managed-path-list">
+            <div class="managed-path"><div class="path-main"><span class="path-icon">C</span><div><strong>Content</strong><small>/srv/aquanova/Content</small></div></div><div class="path-policy"><b>AUTO GROW</b><span>Backend pending</span></div><div class="path-actions"><button data-demo-action="Manage Content">Manage</button><button data-copy-smb="Content">Copy SMB</button></div></div>
+            <div class="managed-path"><div class="path-main"><span class="path-icon">T</span><div><strong>Talent</strong><small>/srv/aquanova/Talent</small></div></div><div class="path-policy fixed"><b>FIXED</b><span>Backend pending</span></div><div class="path-actions"><button data-demo-action="Manage Talent">Manage</button><button data-copy-smb="Talent">Copy SMB</button></div></div>
+            <div class="managed-path"><div class="path-main"><span class="path-icon">M</span><div><strong>Management</strong><small>/srv/aquanova/Management</small></div></div><div class="path-policy fixed"><b>FIXED</b><span>Backend pending</span></div><div class="path-actions"><button data-demo-action="Manage Management">Manage</button><button data-copy-smb="Management">Copy SMB</button></div></div>
+            <div class="managed-path"><div class="path-main"><span class="path-icon">O</span><div><strong>Operations</strong><small>/srv/aquanova/Operations</small></div></div><div class="path-policy"><b>POLICY</b><span>Backend pending</span></div><div class="path-actions"><button data-demo-action="Manage Operations">Manage</button><button data-copy-smb="Operations">Copy SMB</button></div></div>
+          </div>
+        </article>
+        <div class="chart-grid half-half">
+          <article class="panel management-panel"><div class="panel-title"><div><p class="panel-kicker">ACCESS CONTROL</p><h3>Users & Groups</h3></div><span>ACL / Samba</span></div><p>Linux identity, Samba account, storage ACL and SSH permission are treated as separate capabilities.</p><div class="permission-preview"><span>admin <b>Full control</b></span><span>ops <b>Restricted</b></span><span>Storage users <b>Path ACL</b></span></div><button class="management-button secondary" data-demo-action="User & Group Management">Open Access Manager</button></article>
+          <article class="panel management-panel"><div class="panel-title"><div><p class="panel-kicker">PRIVATE NETWORK</p><h3>SMB Access Generator</h3></div><span>ZeroTier required</span></div><div class="vpn-warning"><b>VPN CONNECTION REQUIRED</b><span>Join the authorized Aqua Nova Studio ZeroTier network before opening an SMB path.</span></div><label class="field-label">Access as</label><select id="smbUserSelect" class="management-select"><option>admin</option><option>ops</option></select><div class="copy-address"><code id="smbPreview">smb://admin@ZEROTIER-IP/Content</code><button id="copySmbPreview">Copy</button></div><small>Authorized identities will be supplied by the Samba/ACL backend.</small></article>
+        </div>
+        <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">FILESYSTEM TELEMETRY</p><h3>Physical Filesystems</h3></div><span>Existing monitoring</span></div><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
+        <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">FILE ACTIVITY</p><h3>Storage Audit Stream</h3></div><span>Collector pending</span></div><div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Event</th><th>Source</th><th>Target</th><th>Result</th></tr></thead><tbody><tr><td colspan="6" class="empty-cell">Advanced file activity will appear after the audit backend is enabled.</td></tr></tbody></table></div></article>
       </section>
 
       <section id="network" class="dashboard-section">
@@ -252,6 +280,16 @@
           <div class="panel-title"><div><p class="panel-kicker">RECOVERY AUDIT</p><h3>Restore Activity</h3></div><span>Admin only</span></div>
           <div class="table-scroll"><table><thead><tr><th>Time</th><th>File</th><th>Snapshot</th><th>Status</th><th>Message</th></tr></thead><tbody id="backupRecoveryAudit"><tr><td colspan="5" class="empty-cell">Belum ada recovery.</td></tr></tbody></table></div>
         </article>
+      </section>
+
+      <section id="alerts" class="dashboard-section">
+        <div class="section-head alerts-head"><div><p class="panel-kicker">OPERATIONS CENTER</p><h3>Alerts & Logs</h3><p>Centralized incident visibility for storage, services, backup, Samba, SSH, security and monitoring components.</p></div><span class="backend-state">ALERT ENGINE PENDING</span></div>
+        <div class="severity-grid"><article class="severity-card warning"><span>WARNING</span><strong id="warningCount">0</strong><small>Attention required</small></article><article class="severity-card critical"><span>CRITICAL</span><strong id="criticalCount">0</strong><small>Operational impact risk</small></article><article class="severity-card very-critical"><span>VERY CRITICAL</span><strong id="veryCriticalCount">0</strong><small>Immediate action</small></article></div>
+        <div class="chart-grid two-one">
+          <article class="panel alert-stream"><div class="panel-title"><div><p class="panel-kicker">ACTIVE INCIDENTS</p><h3>Alert Queue</h3></div><span>Detected → Resolved</span></div><div class="empty-state large-empty"><b>No alert backend connected yet.</b><span>Service failures, path capacity events and security incidents will be listed here after backend activation.</span></div></article>
+          <article class="panel incident-policy"><p class="panel-kicker">SEVERITY POLICY</p><h3>Operational Classification</h3><div class="policy-row"><i class="sev-dot warning"></i><div><b>Warning</b><span>Attention required</span></div></div><div class="policy-row"><i class="sev-dot critical"></i><div><b>Critical</b><span>High operational risk</span></div></div><div class="policy-row"><i class="sev-dot very-critical"></i><div><b>Very Critical</b><span>Immediate intervention</span></div></div></article>
+        </div>
+        <article class="panel log-explorer"><div class="panel-title"><div><p class="panel-kicker">LOG EXPLORER</p><h3>Query Operational Events</h3></div><span>Safe structured query</span></div><div class="log-filters"><input type="search" placeholder="Search event, service, path or actor…" disabled><select disabled><option>All severities</option></select><select disabled><option>All sources</option></select><select disabled><option>Last 24 hours</option></select><button disabled>Search</button></div><div class="log-source-chips"><span>SYSTEM</span><span>KERNEL</span><span>SYSTEMD</span><span>STORAGE</span><span>SAMBA</span><span>SSH</span><span>BACKUP</span><span>MONITORING</span></div><div class="empty-state large-empty"><b>Log query API is not enabled.</b><span>The browser will never receive arbitrary journalctl or shell execution access.</span></div></article>
       </section>
 
       <footer>© 2026 Aqua Nova Studio · Infrastructure Monitoring Console · <span id="footerClock"></span></footer>

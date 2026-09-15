@@ -3,6 +3,7 @@ import { startDashboard, stopDashboard } from "./dashboard.js";
 import { initReports } from "./reports.js";
 import { initBackupCenter, stopBackupCenter } from "./backup.js";
 import { $, fmtClock } from "./utils.js";
+import { initManagementUI } from "./management-ui.js";
 
 function initNavigation() {
   document.querySelectorAll(".nav-item").forEach((button) => {
@@ -21,6 +22,7 @@ function initClock() {
 }
 
 initNavigation();
+initManagementUI();
 initReports();
 initClock();
 initAuth(() => { startDashboard(); initBackupCenter(); }, () => { stopDashboard(); stopBackupCenter(); });
