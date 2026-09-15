@@ -3,8 +3,8 @@ import { auth } from "../assets/js/firebase-config.js";
 
 const LOGIN_EMAIL = 'admin@ana.studio';
 const OTP_EMAIL = 'atlantiscorp.top1@gmail.com';
-// Set this to the secure HTTPS gateway origin when the OTP backend is deployed.
-const SECURITY_API = '';
+const SECURITY_API = 'https://172.24.28.36';
+let otpChallengeId = null;
 const $ = id => document.getElementById(id);
 const loginForm = $('loginForm'), otpForm = $('otpForm'), authorizeView = $('authorizeView');
 const password = $('password'), loginButton = $('loginButton'), loginMessage = $('loginMessage');
@@ -50,20 +50,40 @@ $('sendOtp').addEventListener('click', async ()=>{
     if(!SECURITY_API) throw new Error('backend-unavailable');
     const token=await auth.currentUser.getIdToken(true);
     const r=await fetch(`${SECURITY_API}/api/ssh/otp/request`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({purpose:'remote-ssh'})});
-    if(!r.ok) throw new Error('request-failed'); message($('otpMessage'),`Code sent to ${OTP_EMAIL}. It expires in 5 minutes.`,'success');
-  }catch(err){ message($('otpMessage'),'OTP backend belum terhubung. Tampilan sudah siap; server mail/OTP perlu diaktifkan.','error'); }
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok || !data.challengeId) throw new Error(data.error || 'request-failed');
+    otpChallengeId=data.challengeId;
+    otpInputs.forEach(input=>input.value='');
+    $('verifyOtp').disabled=true;
+    message($('otpMessage'),`Code sent to ${data.destination || OTP_EMAIL}. It expires in ${Math.max(1,Math.ceil((data.expiresIn || 300)/60))} minutes.`,'success');
+  }catch(err){
+    const msg = err?.message === 'SSH_ACCESS_NOT_AUTHORIZED' ? 'This account is not authorized for Remote SSH.' :
+      err?.message === 'INVALID_AUTH_TOKEN' ? 'Your login session is invalid. Sign in again.' :
+      err?.message === 'AUTH_TOKEN_REQUIRED' ? 'Authentication token is missing. Sign in again.' :
+      'Failed to send verification code. Check ZeroTier/backend connection and try again.';
+    message($('otpMessage'),msg,'error');
+  }
   finally{ btn.disabled=false; btn.textContent='Send verification code'; }
 });
 
 otpForm.addEventListener('submit', async e=>{
   e.preventDefault(); const code=otpInputs.map(x=>x.value).join(''); if(code.length!==6)return;
+  if(!otpChallengeId){ message($('otpMessage'),'Send a verification code first.','error'); return; }
   const btn=$('verifyOtp'); btn.disabled=true; btn.textContent='Verifying…';
   try{
     if(!SECURITY_API) throw new Error('backend-unavailable');
     const token=await auth.currentUser.getIdToken();
-    const r=await fetch(`${SECURITY_API}/api/ssh/otp/verify`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({code,purpose:'remote-ssh'})});
-    if(!r.ok) throw new Error('verify-failed'); showAuthorize();
-  }catch(err){ message($('otpMessage'),'Verification service belum tersedia. OTP tidak disimulasikan di frontend.','error'); btn.disabled=false; btn.textContent='Verify & authorize'; }
+    const r=await fetch(`${SECURITY_API}/api/ssh/otp/verify`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({challengeId:otpChallengeId,otp:code})});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok || !data.verified) throw new Error(data.error || 'verify-failed');
+    otpChallengeId=null;
+    otpInputs.forEach(input=>input.value='');
+    showAuthorize();
+  }catch(err){
+    const errors={OTP_INVALID:'Invalid verification code.',OTP_EXPIRED:'Verification code expired. Send a new code.',OTP_ALREADY_USED:'This verification code has already been used.',OTP_MAX_ATTEMPTS:'Too many incorrect attempts. Send a new code.',CHALLENGE_NOT_FOUND:'Verification session not found. Send a new code.'};
+    message($('otpMessage'),errors[err?.message] || 'Verification failed. Check the code and try again.','error');
+    btn.disabled=false; btn.textContent='Verify & authorize';
+  }
 });
 
-$('backLogin').addEventListener('click',()=>{ otpForm.classList.add('hidden'); loginForm.classList.remove('hidden'); $('authTitle').textContent='Sign in to Remote SSH'; $('authSubtitle').textContent='Authenticate with the privileged SSH workspace account.'; stage(1); password.focus(); });
+$('backLogin').addEventListener('click',()=>{ otpChallengeId=null; otpInputs.forEach(input=>input.value=''); $('verifyOtp').disabled=true; otpForm.classList.add('hidden'); loginForm.classList.remove('hidden'); $('authTitle').textContent='Sign in to Remote SSH'; $('authSubtitle').textContent='Authenticate with the privileged SSH workspace account.'; stage(1); password.focus(); });
