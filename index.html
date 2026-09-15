@@ -7,10 +7,10 @@
   <meta name="description" content="Aqua Nova Studio Infrastructure Monitoring Dashboard" />
   <title>Aqua Nova Studio — Infrastructure Monitor</title>
   <link rel="icon" href="assets/img/aquanova-logo.png" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20260916-access-ui2" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
-  <script type="module" src="assets/js/app.js?v=20260916-storage1"></script>
+  <script type="module" src="assets/js/app.js?v=20260916-access-ui2"></script>
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -169,8 +169,8 @@
           <div id="managedPathList" class="managed-path-list"><div class="empty-state large-empty"><b>Path Management backend belum aktif.</b><span>Path aktual akan dibaca dari server di bawah approved root /srv/aquanova setelah Storage Path API diaktifkan. Tidak ada path, quota, ACL, user, group, atau SMB share yang di-hardcode di frontend.</span></div></div>
         </article>
         <div class="chart-grid half-half">
-          <article class="panel management-panel"><div class="panel-title"><div><p class="panel-kicker">ACCESS CONTROL</p><h3>Users & Groups</h3></div><span>Backend source of truth</span></div><div class="empty-state"><b>Access Management backend belum aktif.</b><span>Linux identities, Samba accounts, ACL and SSH permissions will be loaded from ANASTUDIO, not defined by this page.</span></div></article>
-          <article class="panel management-panel"><div class="panel-title"><div><p class="panel-kicker">PRIVATE NETWORK</p><h3>SMB Access Generator</h3></div><span>Backend source of truth</span></div><div class="vpn-warning"><b>VPN CONNECTION REQUIRED</b><span>Authorized ZeroTier access is required for private SMB storage.</span></div><div class="empty-state"><b>SMB/ACL backend belum aktif.</b><span>Share name and authorized identities will only be generated from actual Samba and ACL data returned by ANASTUDIO.</span></div></article>
+          <article class="panel management-panel access-live-panel"><div class="panel-title"><div><p class="panel-kicker">ACCESS CONTROL</p><h3>Users & Groups</h3></div><span id="accessState" class="live-mini-state">WAITING</span></div><div id="accessSummary" class="access-summary"></div><div id="accessUserList" class="access-user-list"><div class="empty-state"><b>Waiting for access discovery.</b><span>Linux identities, groups and Samba account state are loaded from ANASTUDIO.</span></div></div></article>
+          <article class="panel management-panel smb-live-panel"><div class="panel-title"><div><p class="panel-kicker">PRIVATE NETWORK</p><h3>SMB Access Generator</h3></div><span id="smbState" class="live-mini-state">WAITING</span></div><div class="vpn-warning"><b>VPN CONNECTION REQUIRED</b><span>Authorized ZeroTier access is required for private SMB storage.</span></div><div id="smbBackendInfo" class="smb-backend-info"></div><div class="smb-form"><label class="field-label" for="smbPathSelect">STORAGE PATH</label><select id="smbPathSelect" class="management-select" disabled><option>Waiting for backend…</option></select><label class="field-label" for="smbUserSelect">ACCESS AS</label><select id="smbUserSelect" class="management-select" disabled><option>Effective access backend pending</option></select><div class="copy-address"><code id="smbAddress">Authorization mapping required</code><button id="copySmbAddress" type="button" disabled>Copy</button></div><small id="smbHint">User/path authorization will not be guessed by the frontend.</small></div></article>
         </div>
         <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">FILESYSTEM TELEMETRY</p><h3>Physical Filesystems</h3></div><span>Existing monitoring</span></div><div class="table-scroll"><table><thead><tr><th>Filesystem</th><th>Mount</th><th>Total</th><th>Used</th><th>Available</th><th>Usage</th></tr></thead><tbody id="storageTable"><tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr></tbody></table></div></article>
         <article class="panel table-panel"><div class="panel-title"><div><p class="panel-kicker">FILE ACTIVITY</p><h3>Storage Audit Stream</h3></div><span>Collector pending</span></div><div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Event</th><th>Source</th><th>Target</th><th>Result</th></tr></thead><tbody><tr><td colspan="6" class="empty-cell">Advanced file activity will appear after the audit backend is enabled.</td></tr></tbody></table></div></article>

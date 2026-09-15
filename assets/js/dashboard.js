@@ -123,6 +123,7 @@ function renderOverview(data) {
   renderCompute(data);
   renderStorage(data?.storage || []);
   renderStorageManagement(data?.storageManagement || null);
+  renderStorageAccess(data?.storageAccess || null, data?.storageManagement || null);
   renderNetwork(data?.network?.traffic || data?.network || []);
   renderProcesses(data?.processes || {});
 
@@ -227,6 +228,59 @@ function renderStorageManagement(storageManagement) {
       <div class="path-usage"><strong>${escapeHtml(used)}</strong><small>Used</small></div>
     </div>`;
   }).join("");
+}
+
+
+function renderStorageAccess(storageAccess, storageManagement) {
+  const state = $("accessState");
+  const summary = $("accessSummary");
+  const list = $("accessUserList");
+  const smbState = $("smbState");
+  const smbInfo = $("smbBackendInfo");
+  const pathSelect = $("smbPathSelect");
+  if (!list) return;
+
+  if (!storageAccess || storageAccess.available !== true) {
+    if (state) state.textContent = "BACKEND UNAVAILABLE";
+    if (smbState) smbState.textContent = "WAITING";
+    if (summary) summary.innerHTML = "";
+    list.innerHTML = '<div class="empty-state"><b>Access discovery belum tersedia.</b><span>Menunggu current/storageAccess dari ANASTUDIO.</span></div>';
+    return;
+  }
+
+  const users = storageAccess.users && typeof storageAccess.users === "object" ? storageAccess.users : {};
+  const groups = storageAccess.groups && typeof storageAccess.groups === "object" ? storageAccess.groups : {};
+  const paths = storageAccess.paths && typeof storageAccess.paths === "object" ? storageAccess.paths : {};
+  const userEntries = Object.entries(users).sort(([a],[b]) => a.localeCompare(b));
+  const sambaCount = userEntries.filter(([,u]) => u?.sambaAccount === true).length;
+  const interactiveCount = userEntries.filter(([,u]) => u?.interactiveShell === true).length;
+  if (state) state.textContent = `LIVE · ${userEntries.length} USERS`;
+  if (summary) summary.innerHTML = `
+    <div><span>LINUX USERS</span><strong>${userEntries.length}</strong></div>
+    <div><span>SAMBA</span><strong>${sambaCount}</strong></div>
+    <div><span>GROUPS</span><strong>${Object.keys(groups).length}</strong></div>
+    <div><span>PATHS</span><strong>${Object.keys(paths).length}</strong></div>`;
+
+  list.innerHTML = userEntries.map(([name,u]) => {
+    const gs = Array.isArray(u?.groups) ? u.groups : [];
+    const chips = gs.slice(0,6).map(g => `<span>${escapeHtml(g)}</span>`).join("") + (gs.length > 6 ? `<span>+${gs.length-6}</span>` : "");
+    return `<div class="access-user-card">
+      <div class="access-user-head"><div class="user-avatar-mini">${escapeHtml(name.slice(0,1).toUpperCase())}</div><div><strong>${escapeHtml(name)}</strong><small>UID ${escapeHtml(safeText(u?.uid))} · ${escapeHtml(safeText(u?.shell))}</small></div></div>
+      <div class="identity-badges"><span class="ok">LINUX</span><span class="${u?.sambaAccount ? "ok" : "muted"}">SMB ${u?.sambaAccount ? "ON" : "OFF"}</span><span class="${u?.interactiveShell ? "warn" : "muted"}">${u?.interactiveShell ? "SHELL" : "NOLOGIN"}</span></div>
+      <div class="group-chips">${chips || '<span>no groups</span>'}</div>
+    </div>`;
+  }).join("") || '<div class="empty-state">No local users discovered.</div>';
+
+  const samba = storageManagement?.samba || {};
+  if (smbState) smbState.textContent = samba?.available ? `LIVE · ${safeText(samba.share, "SMB")}` : "SMB NOT MAPPED";
+  if (smbInfo) smbInfo.innerHTML = `<div><span>SHARE</span><strong>${escapeHtml(safeText(samba?.share, "—"))}</strong></div><div><span>ROOT</span><strong>${escapeHtml(safeText(samba?.root, storageManagement?.root || "—"))}</strong></div><div><span>SMB USERS</span><strong>${sambaCount}</strong></div>`;
+  if (pathSelect) {
+    const pathEntries = Object.entries(paths).sort(([a],[b]) => a.localeCompare(b));
+    pathSelect.innerHTML = pathEntries.map(([key,p]) => `<option value="${escapeHtml(key)}">${escapeHtml(safeText(p?.name,key))} · ${escapeHtml(safeText(p?.group,"—"))}</option>`).join("") || '<option>No paths</option>';
+    pathSelect.disabled = true;
+  }
+  const hint = $("smbHint");
+  if (hint) hint.textContent = "Backend identity + Samba discovery live. Effective RW/RO/DENY mapping is the next backend stage; generator stays locked until then.";
 }
 
 function renderNetwork(network) {
