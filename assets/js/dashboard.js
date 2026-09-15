@@ -141,14 +141,26 @@ function renderOverview(data) {
 }
 
 function renderServices(services) {
-  const entries = Object.entries(services || {});
-  $("serviceCount").textContent = `${entries.length} monitored`;
-  $("serviceGrid").innerHTML = entries.length ? entries.map(([name, state]) => {
-    const online = String(state).toLowerCase() === "online";
-    return `<div class="service-item"><span>${escapeHtml(name)}</span><b class="service-pill ${online ? "" : "offline"}">${online ? "ONLINE" : "OFFLINE"}</b></div>`;
-  }).join("") : '<div class="empty-state">Service metrics belum tersedia pada collector.</div>';
-}
+  const items = services?.items && typeof services.items === "object" ? services.items : {};
+  const entries = Object.entries(items);
+  const monitored = Number.isFinite(Number(services?.monitored)) ? Number(services.monitored) : entries.length;
+  const healthy = Number.isFinite(Number(services?.healthy)) ? Number(services.healthy) : entries.filter(([, state]) => state?.healthy === true).length;
+  const unhealthy = Number.isFinite(Number(services?.unhealthy)) ? Number(services.unhealthy) : Math.max(0, monitored - healthy);
 
+  $("serviceCount").textContent = `${monitored} monitored · ${healthy} healthy · ${unhealthy} issues`;
+
+  if (!entries.length) {
+    $("serviceGrid").innerHTML = '<div class="empty-state">Service metrics belum tersedia pada collector.</div>';
+    return;
+  }
+
+  $("serviceGrid").innerHTML = entries.map(([key, state]) => {
+    const ok = state?.healthy === true;
+    const label = safeText(state?.label, key);
+    const detail = [state?.activeState, state?.subState].filter(Boolean).join(" / ") || "unknown";
+    return `<div class="service-item"><span><strong>${escapeHtml(label)}</strong><small>${escapeHtml(detail)}</small></span><b class="service-pill ${ok ? "" : "offline"}">${ok ? "HEALTHY" : "UNHEALTHY"}</b></div>`;
+  }).join("");
+}
 function renderCompute(data) {
   const cpu = data?.cpu || {};
   const mem = data?.memory || {};
