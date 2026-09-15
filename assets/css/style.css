@@ -110,3 +110,98 @@
 @media(max-width:1100px){.storage-control-grid{grid-template-columns:1fr}.storage-console .access-user-list{grid-template-columns:repeat(2,minmax(0,1fr));max-height:none}.storage-workspace-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.storage-command-head{align-items:flex-start}.storage-head-actions{justify-content:flex-start;width:100%}.storage-primary-action{margin-left:auto}.storage-workspace-nav{display:flex;overflow-x:auto;gap:7px;padding-bottom:3px;scrollbar-width:none}.storage-workspace-nav::-webkit-scrollbar{display:none}.storage-workspace-tab{min-width:150px;flex:0 0 150px;padding:9px}.storage-workspace-tab small{display:none}.storage-panel-header{align-items:center;gap:8px}.storage-panel-header p:not(.panel-kicker){display:none}.storage-panel-actions button{display:none}.storage-console .access-user-list{grid-template-columns:1fr}.storage-list-toolbar>div{display:none}.storage-console .managed-path{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"main usage" "policy policy"}.storage-console .path-main{grid-area:main}.storage-console .path-policy{grid-area:policy}.storage-console .path-usage{grid-area:usage}.storage-filesystem-panel .storage-panel-header,.storage-audit-panel .storage-panel-header{margin-bottom:8px}}
 @media(max-width:420px){.storage-head-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.storage-primary-action{margin:0;width:100%}.storage-workspace-tab{min-width:132px;flex-basis:132px}.storage-panel-header h3{font-size:13px}.source-chip,.pending-chip,.live-mini-state{font-size:6.5px}.storage-console .access-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ==========================================================
+   STORAGE WORKSPACE UX v5 — true responsive tabbed workspace
+   ========================================================== */
+#storage.storage-console{--sx-gap:16px;max-width:100%;overflow:hidden}
+#storage .storage-command-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:14px}
+#storage .storage-command-head>div:first-child{max-width:720px}
+#storage .storage-command-head h3{font-size:22px;line-height:1.15;margin:3px 0 7px}
+#storage .storage-command-head p:not(.panel-kicker){max-width:680px;line-height:1.55}
+#storage .storage-head-actions{flex:0 0 auto}
+#storage .storage-workspace-nav{display:flex;gap:6px;padding:5px;margin:0 0 14px;border:1px solid var(--line);border-radius:12px;background:rgba(5,14,25,.72);overflow-x:auto;scrollbar-width:none}
+#storage .storage-workspace-nav::-webkit-scrollbar{display:none}
+#storage .storage-workspace-tab{min-width:0;flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border:0;border-radius:8px;background:transparent;white-space:nowrap}
+#storage .storage-workspace-tab>span{display:grid;place-items:center;width:25px;height:25px;border-radius:7px;background:#0d1c2d;flex:0 0 25px}
+#storage .storage-workspace-tab b{font-size:9px;letter-spacing:.02em}
+#storage .storage-workspace-tab small{display:none}
+#storage .storage-workspace-tab.active{background:#102238;box-shadow:inset 0 0 0 1px rgba(91,190,255,.22)}
+#storage .storage-workspace-panel{display:none;margin:0}
+#storage .storage-workspace-panel.storage-panel-active{display:block;animation:storageFade .16s ease-out}
+#storage .storage-filesystem-panel.storage-panel-active{display:block;margin-top:14px}
+@keyframes storageFade{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+#storage .storage-control-grid{display:block}
+#storage .storage-panel-header{align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+#storage .storage-panel-header h3{font-size:16px;margin:2px 0 3px}
+#storage .storage-panel-header p:not(.panel-kicker){font-size:8px;max-width:650px}
+#storage .managed-path-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#storage .managed-path{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"main usage" "policy policy"!important;gap:9px 12px!important;padding:13px!important;border:1px solid var(--line)!important;border-radius:10px!important;background:#071321!important;min-width:0}
+#storage .path-main{grid-area:main;min-width:0}
+#storage .path-usage{grid-area:usage;min-width:92px;text-align:right}
+#storage .path-policy{grid-area:policy;min-width:0;border-top:1px solid rgba(255,255,255,.045);padding-top:8px}
+#storage .path-main strong{font-size:11px}
+#storage .path-main small,#storage .path-policy small{overflow-wrap:anywhere;word-break:break-word}
+#storage .access-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+#storage .access-summary>div{min-width:0;padding:11px;border:1px solid var(--line);border-radius:9px;background:#071321}
+#storage .access-user-list{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;max-height:none!important;overflow:visible!important}
+#storage .access-user-card{min-width:0;padding:11px!important;border-radius:9px!important;background:#071321!important}
+#storage .access-user-head{min-width:0}
+#storage .access-user-head>div:last-child{min-width:0}
+#storage .access-user-head small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#storage .group-chips{max-height:54px;overflow:hidden}
+#storage .smb-live-panel{max-width:760px;margin:0 auto!important}
+#storage .smb-backend-info{grid-template-columns:repeat(3,minmax(0,1fr))}
+#storage .smb-form{max-width:620px}
+#storage .table-scroll{max-width:100%;overflow:auto;border-radius:8px}
+#storage .storage-audit-panel table,#storage .storage-filesystem-panel table{width:100%;min-width:720px}
+#storage .storage-list-toolbar{margin:0 0 10px;padding:0 0 10px;border-top:0;border-bottom:1px solid var(--line)}
+
+@media(max-width:1180px){
+  #storage .managed-path-list{grid-template-columns:1fr}
+  #storage .access-user-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+  #storage.storage-console{overflow:visible}
+  #storage .storage-command-head{display:block;margin-bottom:10px}
+  #storage .storage-command-head h3{font-size:18px}
+  #storage .storage-command-head p:not(.panel-kicker){font-size:8px;margin-bottom:10px}
+  #storage .storage-head-actions{display:flex;width:100%;justify-content:space-between;gap:8px}
+  #storage .storage-head-actions>*{min-width:0}
+  #storage .storage-primary-action{margin:0!important;min-height:36px}
+  #storage .storage-workspace-nav{position:sticky;top:58px;z-index:15;margin-left:-2px;margin-right:-2px;padding:4px;background:rgba(5,14,25,.94);backdrop-filter:blur(12px)}
+  #storage .storage-workspace-tab{flex:0 0 auto;min-width:auto;padding:9px 11px}
+  #storage .storage-workspace-tab>span{width:22px;height:22px;flex-basis:22px}
+  #storage .storage-panel-header{align-items:flex-start;gap:8px}
+  #storage .storage-panel-header h3{font-size:14px}
+  #storage .storage-panel-header p:not(.panel-kicker){display:block;font-size:7.5px}
+  #storage .storage-panel-actions{align-self:flex-start}
+  #storage .storage-panel-actions button{display:none}
+  #storage .managed-path-list{grid-template-columns:1fr;gap:7px}
+  #storage .managed-path{grid-template-columns:1fr!important;grid-template-areas:"main" "usage" "policy"!important;padding:11px!important}
+  #storage .path-usage{text-align:left;display:flex;align-items:baseline;gap:6px;min-width:0}
+  #storage .access-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  #storage .access-summary>div{padding:9px}
+  #storage .access-user-list{grid-template-columns:1fr!important;gap:7px!important}
+  #storage .access-user-card{padding:10px!important}
+  #storage .storage-list-toolbar{display:none}
+  #storage .smb-live-panel{max-width:none}
+  #storage .smb-backend-info{grid-template-columns:1fr;gap:6px}
+  #storage .copy-address{grid-template-columns:1fr}
+  #storage .copy-address button{width:100%;min-height:38px}
+  #storage .storage-filesystem-panel table,#storage .storage-audit-panel table{min-width:620px}
+}
+@media(max-width:430px){
+  #storage .storage-command-head h3{font-size:16px}
+  #storage .storage-head-actions{display:grid;grid-template-columns:minmax(0,1fr) auto}
+  #storage .backend-state{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #storage .storage-workspace-tab b{font-size:8px}
+  #storage .storage-workspace-tab>span{display:none}
+  #storage .storage-workspace-tab{padding:9px 10px}
+  #storage .storage-panel-header{display:block}
+  #storage .storage-panel-actions{margin-top:8px}
+  #storage .source-chip,#storage .pending-chip,#storage .live-mini-state{display:inline-block}
+  #storage .access-summary strong{font-size:15px}
+  #storage .identity-badges,#storage .group-chips{gap:4px}
+  #storage .identity-badges span,#storage .group-chips span{font-size:6.5px;padding:3px 5px}
+}
