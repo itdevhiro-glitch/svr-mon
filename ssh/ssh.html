@@ -35,10 +35,16 @@
     </aside>
 
     <section class="panel gateway-console">
-      <div class="console-head"><div><p class="kicker">SECURITY CHECKPOINTS</p><h2>Verify privileged access</h2></div><span id="progressText">1 / 4</span></div>
+      <div class="console-head"><div><p class="kicker">SECURITY CHECKPOINTS</p><h2 id="checkpointTitle">Verify privileged access</h2><p id="checkpointSubtitle" class="checkpoint-subtitle">We’ll guide you through four protected checkpoints before SSH can start.</p></div><span id="progressText">1 / 4</span></div>
       <div class="progress-track"><i id="progressBar"></i></div>
+      <div class="journey" aria-label="SSH security journey">
+        <div class="journey-node active" data-step="1"><i>01</i><span>Session</span></div><b></b>
+        <div class="journey-node" data-step="2"><i>02</i><span>Re-auth</span></div><b></b>
+        <div class="journey-node" data-step="3"><i>03</i><span>Email OTP</span></div><b></b>
+        <div class="journey-node" data-step="4"><i>04</i><span>Authorize</span></div>
+      </div>
 
-      <div class="checkpoint" id="stepSession">
+      <div class="checkpoint active-step" id="stepSession">
         <div class="step-no">01</div><div class="step-copy"><b>Dashboard session</b><span>Confirm the active authenticated ANASTUDIO dashboard identity.</span></div><strong id="sessionCheck" class="step-state checking">Checking…</strong>
       </div>
 
@@ -52,11 +58,11 @@
       </div>
 
       <div class="checkpoint locked" id="stepOtp">
-        <div class="step-no">03</div><div class="step-copy"><b>Email security code</b><span>A single-use 6-digit code will be required before SSH authorization.</span></div><strong id="otpState" class="step-state">Backend required</strong>
+        <div class="step-no">03</div><div class="step-copy"><b>Email security code</b><span>Request a single-use 6-digit authorization code from the Aqua Nova security mailbox.</span></div><strong id="otpState" class="step-state">Backend required</strong>
         <div class="step-form otp-form">
-          <div class="otp-meta"><span>Security code</span><button id="sendOtp" disabled>Send code</button></div>
+          <div class="auth-destination"><span>AUTHORIZATION DESTINATION</span><b>atlantiscorp.top1@gmail.com</b><small>Security codes for Remote SSH will only be requested through this mailbox.</small></div><div class="otp-meta"><span>6-digit security code</span><button id="sendOtp" disabled>Request code</button></div>
           <div class="otp" id="otpInputs"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"></div>
-          <small>OTP is intentionally unavailable until the server-side security-code service is connected.</small>
+          <small id="otpMessage">OTP remains locked until the server-side mail/authorization service is connected. The email address is shown for routing only and is not a frontend secret.</small>
         </div>
       </div>
 
