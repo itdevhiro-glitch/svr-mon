@@ -122,6 +122,7 @@ function renderOverview(data) {
   renderServices(data?.services || {});
   renderCompute(data);
   renderStorage(data?.storage || []);
+  renderStorageManagement(data?.storageManagement || null);
   renderNetwork(data?.network?.traffic || data?.network || []);
   renderProcesses(data?.processes || {});
 
@@ -180,6 +181,52 @@ function renderStorage(storage) {
   const body = $("storageTable");
   if (!Array.isArray(storage) || !storage.length) { body.innerHTML = '<tr><td colspan="6" class="empty-cell">Waiting for storage metrics.</td></tr>'; return; }
   body.innerHTML = storage.map((d) => `<tr><td>${escapeHtml(safeText(d.filesystem))}</td><td><strong>${escapeHtml(safeText(d.mount))}</strong></td><td>${fmtBytes(d.total)}</td><td>${fmtBytes(d.used)}</td><td>${fmtBytes(d.available)}</td><td><div class="usage-cell"><span>${fmtNumber(d.usage, 1)}%</span><div class="mini-bar"><i style="width:${clamp(d.usage)}%"></i></div></div></td></tr>`).join("");
+}
+
+
+function renderStorageManagement(storageManagement) {
+  const list = $("managedPathList");
+  const state = $("storageManagementState");
+  if (!list) return;
+
+  if (!storageManagement || storageManagement.available !== true) {
+    if (state) state.textContent = "BACKEND UNAVAILABLE";
+    list.innerHTML = '<div class="empty-state large-empty"><b>Storage discovery belum tersedia.</b><span>Menunggu data aktual ANASTUDIO dari /servers/anastudio/current/storageManagement.</span></div>';
+    return;
+  }
+
+  const paths = storageManagement.paths && typeof storageManagement.paths === "object" ? storageManagement.paths : {};
+  const entries = Object.entries(paths).sort(([a],[b]) => a.localeCompare(b));
+  const count = Number.isFinite(Number(storageManagement.count)) ? Number(storageManagement.count) : entries.length;
+  if (state) state.textContent = `LIVE · ${count} PATHS`;
+
+  const fsInfo = storageManagement.filesystem || {};
+  const samba = storageManagement.samba || {};
+  const root = safeText(storageManagement.root, "—");
+  const meta = [
+    root,
+    [fsInfo.source, fsInfo.type].filter(Boolean).join(" · "),
+    storageManagement.aclAvailable ? "ACL available" : "ACL unavailable",
+    samba.available && samba.share ? `SMB ${samba.share}` : "SMB not mapped"
+  ].filter(Boolean).map(escapeHtml).join(" · ");
+
+  if (!entries.length) {
+    list.innerHTML = `<div class="empty-state large-empty"><b>0 managed paths discovered.</b><span>${meta}</span></div>`;
+    return;
+  }
+
+  list.innerHTML = `<div class="storage-live-meta">${meta}</div>` + entries.map(([key, item]) => {
+    const name = safeText(item?.name, key);
+    const path = safeText(item?.path, "—");
+    const identity = `${safeText(item?.owner, "—")}:${safeText(item?.group, "—")}`;
+    const mode = safeText(item?.mode, "—");
+    const used = item?.usedBytes == null ? "—" : fmtBytes(item.usedBytes);
+    return `<div class="managed-path">
+      <div class="path-main"><div class="path-icon">▰</div><div><strong>${escapeHtml(name)}</strong><small>${escapeHtml(path)}</small></div></div>
+      <div class="path-policy"><b>LIVE SERVER PATH</b><span>${escapeHtml(identity)} · mode ${escapeHtml(mode)}</span></div>
+      <div class="path-usage"><strong>${escapeHtml(used)}</strong><small>Used</small></div>
+    </div>`;
+  }).join("");
 }
 
 function renderNetwork(network) {

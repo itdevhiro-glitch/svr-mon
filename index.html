@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
-  <script type="module" src="assets/js/app.js?v=20260916-services2"></script>
+  <script type="module" src="assets/js/app.js?v=20260916-storage1"></script>
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -163,7 +163,7 @@
       </section>
 
       <section id="storage" class="dashboard-section">
-        <div class="section-head storage-head"><div><p class="panel-kicker">STORAGE & ACCESS</p><h3>Path Management</h3><p>Path, policy, ACL, Samba access, quota and audit data are supplied by the ANASTUDIO management backend. The frontend does not define server paths or identities.</p></div><span class="backend-state">MANAGEMENT API PENDING</span></div>
+        <div class="section-head storage-head"><div><p class="panel-kicker">STORAGE & ACCESS</p><h3>Path Management</h3><p>Path, policy, ACL, Samba access, quota and audit data are supplied by the ANASTUDIO management backend. The frontend does not define server paths or identities.</p></div><span id="storageManagementState" class="backend-state">WAITING FOR SERVER</span></div>
         <article class="panel storage-manager">
           <div class="panel-title"><div><p class="panel-kicker">MANAGED PATHS</p><h3>ANASTUDIO Storage Paths</h3></div><span>Backend source of truth</span></div>
           <div id="managedPathList" class="managed-path-list"><div class="empty-state large-empty"><b>Path Management backend belum aktif.</b><span>Path aktual akan dibaca dari server di bawah approved root /srv/aquanova setelah Storage Path API diaktifkan. Tidak ada path, quota, ACL, user, group, atau SMB share yang di-hardcode di frontend.</span></div></div>

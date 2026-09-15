@@ -1,5 +1,5 @@
 import { initAuth } from "./auth.js";
-import { startDashboard, stopDashboard } from "./dashboard.js?v=20260916-services2";
+import { startDashboard, stopDashboard } from "./dashboard.js?v=20260916-storage1";
 import { initReports } from "./reports.js";
 import { initBackupCenter, stopBackupCenter } from "./backup.js";
 import { $, fmtClock } from "./utils.js";
