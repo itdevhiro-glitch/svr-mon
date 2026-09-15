@@ -4,92 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050b14">
-  <title>ANASTUDIO — Secure Remote SSH</title>
+  <title>ANASTUDIO — Remote SSH</title>
   <link rel="icon" href="../assets/img/aquanova-logo.png">
   <link rel="stylesheet" href="ssh.css">
   <script type="module" src="ssh.js"></script>
 </head>
-<body>
-<div class="orb orb-a"></div><div class="orb orb-b"></div>
+<body class="auth-page">
 <header class="topbar">
   <a class="brand" href="../index.html"><img src="../assets/img/aquanova-logo.png" alt="Aqua Nova"><div><b>AQUA NOVA</b><span>SECURE OPERATIONS</span></div></a>
-  <div class="top-actions"><span class="server-pill"><i></i> ANASTUDIO</span><span id="connectionState" class="state-pill">SECURITY GATEWAY</span></div>
+  <a class="back" href="../index.html">← Dashboard</a>
 </header>
 
-<main>
-<section id="gateway" class="gateway-view">
-  <div class="page-heading">
-    <div><p class="kicker">PRIVILEGED ACCESS</p><h1>Remote SSH Security Gateway</h1><p>Dedicated authorization surface for ANASTUDIO. Complete every security checkpoint before a remote shell session can be created.</p></div>
-    <a class="return-link" href="../index.html">← Monitoring Dashboard</a>
-  </div>
+<main class="auth-shell">
+  <section class="auth-card" id="authCard">
+    <div class="auth-brand"><div class="terminal-mark">&gt;_</div><p class="eyebrow">ANASTUDIO SECURE ACCESS</p><h1 id="authTitle">Sign in to Remote SSH</h1><p id="authSubtitle">Authenticate with the privileged SSH workspace account.</p></div>
 
-  <div class="gateway-grid">
-    <aside class="panel access-overview">
-      <div class="panel-title"><div class="icon-box">&gt;_</div><div><p class="kicker">REMOTE TARGET</p><h2>ANASTUDIO</h2></div></div>
-      <div class="target-row"><span>Connection</span><b>SSH / TCP 22</b></div>
-      <div class="target-row"><span>Gateway</span><b>Required</b></div>
-      <div class="target-row"><span>Transport</span><b>HTTPS → WSS → SSH</b></div>
-      <div class="target-row"><span>Credential storage</span><b class="good">Frontend: none</b></div>
-      <div class="notice"><b>ISOLATED WORKSPACE</b><span>This page is intentionally separated from the monitoring dashboard. SSH credentials must never be stored in browser source or Firebase.</span></div>
-      <div class="policy-mini"><span>Idle timeout<strong>15–30 min</strong></span><span>OTP validity<strong>5 min target</strong></span><span>Audit<strong>Required</strong></span></div>
-    </aside>
+    <div class="mini-progress" aria-label="Authorization progress">
+      <span class="active" id="progressLogin"><i>1</i> Sign in</span><b></b><span id="progressOtp"><i>2</i> Verify OTP</span><b></b><span id="progressDone"><i>3</i> Authorize</span>
+    </div>
 
-    <section class="panel gateway-console">
-      <div class="console-head"><div><p class="kicker">SECURITY CHECKPOINTS</p><h2 id="checkpointTitle">Verify privileged access</h2><p id="checkpointSubtitle" class="checkpoint-subtitle">We’ll guide you through four protected checkpoints before SSH can start.</p></div><span id="progressText">1 / 4</span></div>
-      <div class="progress-track"><i id="progressBar"></i></div>
-      <div class="journey" aria-label="SSH security journey">
-        <div class="journey-node active" data-step="1"><i>01</i><span>Session</span></div><b></b>
-        <div class="journey-node" data-step="2"><i>02</i><span>Re-auth</span></div><b></b>
-        <div class="journey-node" data-step="3"><i>03</i><span>Email OTP</span></div><b></b>
-        <div class="journey-node" data-step="4"><i>04</i><span>Authorize</span></div>
-      </div>
+    <form id="loginForm" class="auth-form">
+      <label for="email">Email</label>
+      <input id="email" type="email" value="admin@ana.studio" readonly autocomplete="username">
+      <label for="password">Password</label>
+      <div class="password-field"><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" id="togglePassword" aria-label="Show password">Show</button></div>
+      <div id="loginMessage" class="form-message"></div>
+      <button class="primary" id="loginButton" type="submit">Sign in securely</button>
+    </form>
 
-      <div class="checkpoint active-step" id="stepSession">
-        <div class="step-no">01</div><div class="step-copy"><b>Dashboard session</b><span>Confirm the active authenticated ANASTUDIO dashboard identity.</span></div><strong id="sessionCheck" class="step-state checking">Checking…</strong>
-      </div>
+    <form id="otpForm" class="auth-form hidden">
+      <div class="otp-icon">✉</div>
+      <p class="otp-copy">Enter the 6-digit verification code sent to</p>
+      <strong class="destination">atlantiscorp.top1@gmail.com</strong>
+      <div class="otp" id="otpInputs"><input inputmode="numeric" maxlength="1"><input inputmode="numeric" maxlength="1"><input inputmode="numeric" maxlength="1"><input inputmode="numeric" maxlength="1"><input inputmode="numeric" maxlength="1"><input inputmode="numeric" maxlength="1"></div>
+      <div id="otpMessage" class="form-message">Request a new security code to continue.</div>
+      <button class="primary" id="verifyOtp" type="submit" disabled>Verify & authorize</button>
+      <button class="secondary" id="sendOtp" type="button">Send verification code</button>
+      <button class="text-button" id="backLogin" type="button">Use a different sign-in</button>
+    </form>
 
-      <div class="checkpoint" id="stepReauth">
-        <div class="step-no">02</div><div class="step-copy"><b>Re-authentication</b><span>Re-enter the password for the currently signed-in dashboard account.</span></div><strong id="reauthState" class="step-state">Locked</strong>
-        <div class="step-form">
-          <label>Authenticated account</label><input id="account" value="—" disabled>
-          <label>Dashboard password</label><div class="password-row"><input id="password" type="password" autocomplete="current-password" placeholder="Enter current password" disabled><button id="reauthButton" disabled>Verify identity</button></div>
-          <small id="reauthMessage">Waiting for dashboard session verification.</small>
-        </div>
-      </div>
+    <div id="authorizeView" class="authorize-view hidden">
+      <div class="success-ring">✓</div><h2>Identity verified</h2><p>Your SSH authorization is ready. A short-lived secure session is required before the terminal can open.</p>
+      <button class="primary" id="openWorkspace" disabled>Open SSH Workspace</button>
+      <small id="authorizeMessage">Waiting for the SSH gateway backend.</small>
+    </div>
 
-      <div class="checkpoint locked" id="stepOtp">
-        <div class="step-no">03</div><div class="step-copy"><b>Email security code</b><span>Request a single-use 6-digit authorization code from the Aqua Nova security mailbox.</span></div><strong id="otpState" class="step-state">Backend required</strong>
-        <div class="step-form otp-form">
-          <div class="auth-destination"><span>AUTHORIZATION DESTINATION</span><b>atlantiscorp.top1@gmail.com</b><small>Security codes for Remote SSH will only be requested through this mailbox.</small></div><div class="otp-meta"><span>6-digit security code</span><button id="sendOtp" disabled>Request code</button></div>
-          <div class="otp" id="otpInputs"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"><input disabled maxlength="1"></div>
-          <small id="otpMessage">OTP remains locked until the server-side mail/authorization service is connected. The email address is shown for routing only and is not a frontend secret.</small>
-        </div>
-      </div>
-
-      <div class="checkpoint locked" id="stepAuthorize">
-        <div class="step-no">04</div><div class="step-copy"><b>SSH authorization</b><span>Server-side RBAC, short-lived authorization and SSH gateway approval.</span></div><strong class="step-state">Backend required</strong>
-      </div>
-
-      <div class="gateway-actions"><div><b id="gateTitle">Security gateway not complete</b><span id="gateMessage">Checking your current dashboard authentication session…</span></div><button id="verifyButton" disabled>Open SSH Workspace →</button></div>
-    </section>
-
-    <aside class="panel security-panel">
-      <p class="kicker">SECURITY CONTEXT</p><h2>Session policy</h2>
-      <div class="security-item"><i class="shield">✓</i><div><b>Browser isolation</b><span>SSH is never opened directly from browser to port 22.</span></div></div>
-      <div class="security-item"><i>⌁</i><div><b>Short-lived session</b><span>Gateway authorization expires and must not become a permanent token.</span></div></div>
-      <div class="security-item"><i>◎</i><div><b>Audited access</b><span>Connect, disconnect, identity and security events will be recorded server-side.</span></div></div>
-      <div class="security-item"><i>×</i><div><b>No frontend secrets</b><span>No SSH password, private key or OTP secret belongs in this repository.</span></div></div>
-      <div class="backend-box"><span>BACKEND STATUS</span><b>SSH gateway not connected</b><small>The UI will not simulate a successful SSH connection while the secure backend is unavailable.</small></div>
-    </aside>
-  </div>
-</section>
+    <div class="auth-footer"><span>Protected access</span><i></i><span>ANASTUDIO · SSH 22</span></div>
+  </section>
+</main>
 
 <section id="workspace" class="workspace hidden">
-  <aside class="panel session-panel"><p class="kicker">SESSION</p><h2>Connection</h2><dl><dt>Server</dt><dd>ANASTUDIO</dd><dt>SSH User</dt><dd>admin</dd><dt>Port</dt><dd>22</dd><dt>Security</dt><dd class="good">Verified</dd><dt>Session ID</dt><dd id="sessionId">—</dd><dt>Elapsed</dt><dd id="sessionTimer">00:00:00</dd></dl><button class="danger-button" id="disconnectButton">Disconnect session</button></aside>
-  <section class="terminal-shell"><div class="terminal-head"><div><span class="term-dot"></span><b>admin@anastudio</b><small>Secure shell</small></div><div class="terminal-actions"><button disabled>Clear</button><button disabled>Copy</button><button disabled>Paste</button><button disabled>Fullscreen</button></div></div><div class="terminal"><span class="muted">Aqua Nova Studio Secure Remote Terminal</span><br><span class="muted">Waiting for secure SSH gateway backend…</span><br><br><b>admin@anastudio:~$</b> <i class="cursor"></i></div><div class="keybar"><button disabled>CTRL</button><button disabled>ALT</button><button disabled>TAB</button><button disabled>ESC</button><button disabled>↑</button><button disabled>↓</button><button disabled>←</button><button disabled>→</button></div></section>
-  <aside class="panel status-panel"><p class="kicker">SECURITY</p><h2>Verified context</h2><div class="service"><span>Dashboard session</span><b class="good">Verified</b></div><div class="service"><span>Re-authentication</span><b class="good">Verified</b></div><div class="service"><span>Email OTP</span><b>Required</b></div><div class="service"><span>RBAC</span><b>Required</b></div><h3>Connection</h3><p class="empty">Terminal connection remains unavailable until the WSS → OpenSSH gateway is enabled.</p></aside>
+  <div class="terminal-shell"><div class="terminal-head"><div><span class="term-dot"></span><b>admin@anastudio</b><small>Secure shell</small></div><button id="disconnectButton">Disconnect</button></div><div class="terminal"><span class="muted">Aqua Nova Studio Secure Remote Terminal</span><br><span class="muted">Waiting for secure SSH gateway backend…</span><br><br><b>admin@anastudio:~$</b> <i class="cursor"></i></div></div>
 </section>
-</main>
-<footer><span>ANASTUDIO Secure Operations · Credentials are never stored in the frontend</span><span>Remote SSH Workspace</span></footer>
+<footer><span>Credentials are never stored in frontend source</span><span>Remote SSH Workspace</span></footer>
 </body>
 </html>
