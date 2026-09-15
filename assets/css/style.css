@@ -10,3 +10,95 @@
 
 .storage-live-meta{grid-column:1/-1;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#07111e;color:#6f879f;font-size:9px;line-height:1.5}.path-usage{text-align:right;min-width:90px}.path-usage strong,.path-usage small{display:block}.path-usage strong{font-size:12px;color:#dbe8f7}.path-usage small{font-size:8px;color:#61768f;margin-top:4px}@media(max-width:900px){.path-usage{text-align:left}}
 \n/* Access Control + responsive storage refinement */\n.access-live-panel,.smb-live-panel{min-width:0}.live-mini-state{font-size:8px;font-weight:900;letter-spacing:.09em;color:#69d9c1;border:1px solid rgba(105,217,193,.18);background:rgba(105,217,193,.05);padding:6px 8px;border-radius:99px;white-space:nowrap}.access-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}.access-summary>div,.smb-backend-info>div{background:#07111e;border:1px solid var(--line);border-radius:9px;padding:10px;min-width:0}.access-summary span,.smb-backend-info span{display:block;color:#607890;font-size:7px;font-weight:900;letter-spacing:.09em}.access-summary strong,.smb-backend-info strong{display:block;color:#d9e7f6;font-size:13px;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.access-user-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:390px;overflow:auto;padding-right:3px}.access-user-card{background:#07111e;border:1px solid var(--line);border-radius:10px;padding:11px;min-width:0}.access-user-head{display:flex;gap:9px;align-items:center;min-width:0}.access-user-head>div:last-child{min-width:0}.access-user-head strong,.access-user-head small{display:block}.access-user-head strong{font-size:11px;color:#dce8f6}.access-user-head small{font-size:7.5px;color:#60758d;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.user-avatar-mini{width:30px;height:30px;flex:0 0 30px;border-radius:8px;background:linear-gradient(145deg,#173f62,#4955a7);display:grid;place-items:center;font-size:11px;font-weight:900}.identity-badges,.group-chips{display:flex;gap:5px;flex-wrap:wrap}.identity-badges{margin:9px 0 7px}.identity-badges span,.group-chips span{border:1px solid var(--line);border-radius:99px;padding:4px 6px;font-size:6.8px;font-weight:800}.identity-badges .ok{color:#69d9c1;background:rgba(105,217,193,.05)}.identity-badges .warn{color:#f0c76d;background:rgba(240,199,109,.05)}.identity-badges .muted,.group-chips span{color:#70869e;background:#091522}.smb-backend-info{display:grid;grid-template-columns:.7fr 1.6fr .7fr;gap:8px;margin:12px 0}.smb-form{margin-top:12px}.smb-form>small{display:block;color:#62778f;font-size:8px;line-height:1.45;margin-top:9px}.managed-path-list{max-width:100%}.managed-path{overflow:hidden}.path-main,.path-policy,.path-usage{min-width:0}.storage-live-meta{overflow-wrap:anywhere}\n@media(max-width:1100px){.access-user-list{grid-template-columns:1fr}.smb-backend-info{grid-template-columns:1fr 1fr}.smb-backend-info>div:nth-child(2){grid-column:1/-1;grid-row:2}}\n@media(max-width:900px){.half-half{gap:12px}.management-panel{padding:16px}.access-summary{grid-template-columns:repeat(4,minmax(0,1fr))}.access-user-list{max-height:none;overflow:visible}.managed-path{padding:13px}.path-policy{padding-left:45px}.path-usage{padding-left:45px}.smb-backend-info{grid-template-columns:1fr 1fr}.smb-live-panel .copy-address{gap:8px}}\n@media(max-width:520px){.main-content{padding-left:10px;padding-right:10px}.panel,.storage-manager,.management-panel{border-radius:12px}.access-summary{grid-template-columns:1fr 1fr}.access-summary>div{padding:9px}.access-user-card{padding:10px}.identity-badges span,.group-chips span{font-size:6.5px}.smb-backend-info{grid-template-columns:1fr}.smb-backend-info>div:nth-child(2){grid-column:auto;grid-row:auto}.managed-path{gap:8px}.path-policy,.path-usage{padding-left:0}.path-usage{display:flex;align-items:baseline;gap:6px}.path-usage small{margin:0}.storage-live-meta{font-size:8px}.panel-title{gap:8px}.panel-title h3{font-size:14px}.live-mini-state{font-size:7px}}\n
+/* ==========================================================
+   MOBILE UX HARDENING v3 — ANASTUDIO
+   ========================================================== */
+@media (max-width: 900px) {
+  html, body { width:100%; max-width:100%; overflow-x:hidden; }
+  .app-view, .main-content, .dashboard-section { width:100%; max-width:100%; min-width:0; }
+  .main-content { padding:0 12px 20px; }
+  .topbar { min-height:68px; padding-left:52px; margin-bottom:16px; gap:8px; }
+  .topbar h2 { font-size:15px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .topbar-actions { flex:0 0 auto; }
+  .section-head { gap:10px; }
+  .section-head > div { min-width:0; width:100%; }
+  .section-head p:not(.panel-kicker) { font-size:10px; line-height:1.55; max-width:100%; }
+  .panel { max-width:100%; min-width:0; overflow:hidden; }
+  .panel-title { align-items:center; min-width:0; }
+  .panel-title > div { min-width:0; }
+  .panel-title > span, .live-mini-state, .backend-state { flex:0 0 auto; max-width:45%; overflow:hidden; text-overflow:ellipsis; }
+
+  /* Storage becomes one clean vertical flow. */
+  #storage .chart-grid.half-half { display:grid; grid-template-columns:minmax(0,1fr); gap:12px; }
+  #storage .storage-manager,
+  #storage .management-panel,
+  #storage .table-panel { padding:14px; }
+  #storage .managed-path-list { gap:9px; }
+  #storage .managed-path { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"main usage" "policy policy"; gap:8px 10px; padding:12px; }
+  #storage .path-main { grid-area:main; min-width:0; }
+  #storage .path-policy { grid-area:policy; padding:8px 0 0; border-top:1px solid var(--line); }
+  #storage .path-usage { grid-area:usage; padding:0; text-align:right; min-width:72px; align-self:center; }
+  #storage .path-main small { white-space:normal; overflow-wrap:anywhere; line-height:1.35; }
+
+  /* Access cards: readable, no nested scrolling. */
+  #storage .access-summary { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+  #storage .access-summary > div { padding:10px; }
+  #storage .access-summary strong { font-size:16px; }
+  #storage .access-user-list { display:grid; grid-template-columns:minmax(0,1fr); max-height:none; overflow:visible; padding:0; gap:8px; }
+  #storage .access-user-card { width:100%; padding:11px; }
+  #storage .access-user-head small { white-space:normal; overflow-wrap:anywhere; line-height:1.35; }
+  #storage .identity-badges, #storage .group-chips { gap:5px; }
+  #storage .identity-badges span, #storage .group-chips span { font-size:7px; padding:4px 6px; }
+
+  /* SMB card stacks naturally. */
+  #storage .smb-backend-info { grid-template-columns:1fr; gap:7px; }
+  #storage .smb-backend-info > div:nth-child(2) { grid-column:auto; grid-row:auto; }
+  #storage .management-select { min-height:42px; font-size:12px; }
+  #storage .copy-address { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:7px; }
+  #storage .copy-address code { width:auto; white-space:normal; overflow-wrap:anywhere; line-height:1.4; }
+  #storage .copy-address button { min-width:64px; }
+
+  /* Tables remain usable without forcing the entire page wider. */
+  #storage .table-scroll { width:100%; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:8px; }
+  #storage table { min-width:680px; }
+}
+
+@media (max-width: 560px) {
+  .main-content { padding:0 9px 16px; }
+  .mobile-nav-toggle { left:9px; top:10px; width:38px; height:38px; }
+  .topbar { min-height:58px; padding-left:46px; margin-bottom:12px; }
+  .topbar h2 { font-size:14px; }
+  .alert-bell { width:34px; height:34px; }
+  .section-head { margin-bottom:11px; }
+  .section-head h3 { font-size:17px; }
+  .panel-kicker { font-size:9px; }
+  #storage .storage-head { gap:9px; }
+  #storage .storage-head .backend-state { max-width:100%; align-self:flex-start; }
+  #storage .storage-manager,
+  #storage .management-panel,
+  #storage .table-panel { padding:12px; border-radius:11px; }
+  #storage .panel-title { margin-bottom:11px; }
+  #storage .panel-title h3 { font-size:13px; }
+  #storage .panel-title > span, #storage .live-mini-state { max-width:42%; font-size:6.5px; padding:5px 6px; }
+  #storage .managed-path { grid-template-columns:minmax(0,1fr); grid-template-areas:"main" "usage" "policy"; }
+  #storage .path-usage { text-align:left; display:flex; gap:6px; align-items:baseline; min-width:0; }
+  #storage .path-icon { width:32px; height:32px; flex:0 0 32px; }
+  #storage .access-summary { grid-template-columns:1fr 1fr; }
+  #storage .access-summary span { font-size:6.5px; }
+  #storage .access-summary strong { font-size:14px; }
+  #storage .user-avatar-mini { width:32px; height:32px; flex-basis:32px; }
+  #storage .access-user-head strong { font-size:12px; }
+  #storage .identity-badges span, #storage .group-chips span { font-size:6.8px; line-height:1.15; }
+  #storage .vpn-warning { padding:10px; }
+  #storage .smb-backend-info strong { white-space:normal; overflow-wrap:anywhere; font-size:11px; }
+  #storage .copy-address { grid-template-columns:1fr; }
+  #storage .copy-address button { width:100%; min-height:38px; }
+  #storage table { min-width:640px; font-size:9px; }
+}
+
+@media (max-width: 380px) {
+  .main-content { padding-left:7px; padding-right:7px; }
+  #storage .access-summary { grid-template-columns:1fr 1fr; gap:6px; }
+  #storage .access-summary > div { padding:8px; }
+  #storage .identity-badges span, #storage .group-chips span { padding:3px 5px; }
+}
