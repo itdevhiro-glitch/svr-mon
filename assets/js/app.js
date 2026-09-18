@@ -2,7 +2,8 @@ import { initAuth } from "./auth.js";
 import { startDashboard, stopDashboard } from "./dashboard.js?v=20260916-access-ui2";
 import { initReports } from "./reports.js";
 import { initBackupCenter, stopBackupCenter } from "./backup.js";
-import { initAlertsCenter, stopAlertsCenter } from "./alerts.js?v=20260916-alerts-firebase-v2";
+import { initAlertsCenter, stopAlertsCenter } from "./alerts.js?v=20260918-alerts-v3";
+import { initStorageHealth, stopStorageHealth } from "./storage-health.js?v=20260918-sh-v1";
 import { $, fmtClock } from "./utils.js";
 
 function initNavigation() {
@@ -72,4 +73,4 @@ function initResponsiveManagementUI() {
 initResponsiveManagementUI();
 initReports();
 initClock();
-initAuth(() => { startDashboard(); initBackupCenter(); initAlertsCenter(); }, () => { stopDashboard(); stopBackupCenter(); stopAlertsCenter(); });
+initAuth(() => { startDashboard(); initBackupCenter(); initAlertsCenter(); initStorageHealth(); }, () => { stopDashboard(); stopBackupCenter(); stopAlertsCenter(); stopStorageHealth(); });

@@ -71,6 +71,7 @@
         <button class="nav-item active" data-section="overview"><span>◫</span> Overview</button>
         <button class="nav-item" data-section="compute"><span>⌁</span> Compute</button>
         <button class="nav-item" data-section="storage"><span>▱</span> Storage</button>
+        <button class="nav-item" data-section="storage-health"><span>◇</span> Storage Health</button>
         <button class="nav-item" data-section="network"><span>⌯</span> Network</button>
         <button class="nav-item" data-section="processes"><span>≋</span> Processes</button>
         <button class="nav-item" data-section="reports"><span>▤</span> Reports</button>
@@ -294,6 +295,18 @@
           <div class="panel-title"><div><p class="panel-kicker">RECOVERY AUDIT</p><h3>Restore Activity</h3></div><span>Admin only</span></div>
           <div class="table-scroll"><table><thead><tr><th>Time</th><th>File</th><th>Snapshot</th><th>Status</th><th>Message</th></tr></thead><tbody id="backupRecoveryAudit"><tr><td colspan="5" class="empty-cell">Belum ada recovery.</td></tr></tbody></table></div>
         </article>
+      </section>
+
+      <section id="storage-health" class="dashboard-section storage-health-console">
+        <div class="section-head storage-health-head"><div><p class="panel-kicker">INFRASTRUCTURE / STORAGE HEALTH</p><h3>Physical Storage Health Center</h3><p>Multi-drive SMART diagnostics, temperature, sector integrity, lifecycle and filesystem mapping from ANASTUDIO.</p></div><span id="storageHealthState" class="backend-state">WAITING FOR COLLECTOR</span></div>
+        <div class="storage-health-summary">
+          <article class="panel sh-summary-card"><span>PHYSICAL DRIVES</span><strong id="shDriveCount">0</strong><small>Detected hardware</small></article>
+          <article class="panel sh-summary-card healthy"><span>HEALTHY</span><strong id="shHealthyCount">0</strong><small>Normal SMART state</small></article>
+          <article class="panel sh-summary-card warning"><span>WARNING</span><strong id="shWarningCount">0</strong><small>Needs attention</small></article>
+          <article class="panel sh-summary-card critical"><span>CRITICAL</span><strong id="shCriticalCount">0</strong><small>Immediate action</small></article>
+        </div>
+        <article class="panel sh-fleet-banner"><div><p class="panel-kicker">DRIVE FLEET</p><h3>Physical Drive Inventory</h3><p>Drive identity is tracked by serial/WWN when available; /dev/sdX is treated as the current Linux device name.</p></div><div><span>LAST CHECK</span><b id="shLastCheck">—</b></div></article>
+        <div id="storageDriveGrid" class="storage-drive-grid"><div class="empty-state large-empty"><b>Waiting for physical drive telemetry.</b><span>Storage Health data will appear after the server collector is upgraded.</span></div></div>
       </section>
 
       <section id="alerts" class="dashboard-section">
