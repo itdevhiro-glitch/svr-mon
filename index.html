@@ -297,24 +297,17 @@
         </article>
       </section>
 
-      <section id="storage-health" class="dashboard-section storage-health-console sh-vast">
-        <div class="section-head storage-health-head"><div><p class="panel-kicker">INFRASTRUCTURE / STORAGE HEALTH</p><h3>Storage Health</h3><p>Physical disk capacity, SMART integrity, lifecycle, filesystem usage and actionable diagnostics.</p></div><span id="storageHealthState" class="backend-state">CONNECTING</span></div>
-        <div class="sh-vast-tabs"><span class="active">Overview</span><span>Physical Drives</span><span>SMART Details</span><span>Filesystem</span><span>Diagnostics</span></div>
-        <div class="sh-vast-top">
-          <article class="panel sh-vast-card" id="shCapacityPanel"></article>
-          <article class="panel sh-vast-card" id="shHealthPanel"></article>
-          <article class="panel sh-vast-card" id="shInventoryPanel"></article>
+      <section id="storage-health" class="dashboard-section storage-health-console sh-pro">
+        <div class="section-head storage-health-head"><div><p class="panel-kicker">INFRASTRUCTURE / PHYSICAL STORAGE</p><h3>Storage Health & SMART Control</h3><p>Full physical-drive telemetry, SMART attributes, sector integrity, lifecycle, workload, filesystem and actionable diagnostics.</p></div><span id="storageHealthState" class="backend-state">CONNECTING</span></div>
+        <div class="sh-tabs" role="tablist">
+          <button class="sh-tab active" data-sh-tab="overview">Overview</button><button class="sh-tab" data-sh-tab="drives">Physical Drives</button><button class="sh-tab" data-sh-tab="smart">SMART Details</button><button class="sh-tab" data-sh-tab="filesystem">Filesystem</button><button class="sh-tab" data-sh-tab="diagnostics">Diagnostics</button>
         </div>
-        <div class="sh-vast-mid">
-          <article class="panel sh-vast-wide" id="shSectorPanel"></article>
-          <article class="panel sh-vast-wide" id="shLifecyclePanel"></article>
-        </div>
-        <article class="panel sh-vast-diagnostics" id="storageDiagnosticCenter"><div class="empty-state large-empty"><b>Waiting for diagnostics.</b></div></article>
-        <div class="sh-vast-bottom">
-          <article class="panel" id="shPhysicalPanel"></article>
-          <article class="panel" id="shFilesystemPanel"></article>
-        </div>
-        <div class="sh-vast-foot"><span>LAST CHECK</span><b id="shLastCheck">—</b></div>
+        <div id="shOverview" class="sh-tabpage active"></div>
+        <div id="shDrives" class="sh-tabpage"></div>
+        <div id="shSmart" class="sh-tabpage"></div>
+        <div id="shFilesystem" class="sh-tabpage"></div>
+        <div id="shDiagnostics" class="sh-tabpage"></div>
+        <div class="sh-foot"><span>LAST SMART CHECK</span><b id="shLastCheck">—</b><span class="sh-foot-note">Read-only telemetry · no self-test is started by this dashboard</span></div>
       </section>
 
       <section id="alerts" class="dashboard-section">
