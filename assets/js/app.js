@@ -3,7 +3,7 @@ import { startDashboard, stopDashboard } from "./dashboard.js?v=20260916-access-
 import { initReports } from "./reports.js";
 import { initBackupCenter, stopBackupCenter } from "./backup.js";
 import { initAlertsCenter, stopAlertsCenter } from "./alerts.js?v=20260918-alerts-v3";
-import { initStorageHealth, stopStorageHealth } from "./storage-health.js?v=20260918-sh-v16-fullsmart";
+import { initStorageHealth, stopStorageHealth } from "./storage-health.js?v=20260918-sh-v17-fullsmart";
 import { $, fmtClock } from "./utils.js";
 
 function initNavigation() {
