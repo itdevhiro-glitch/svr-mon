@@ -297,18 +297,24 @@
         </article>
       </section>
 
-      <section id="storage-health" class="dashboard-section storage-health-console">
-        <div class="section-head storage-health-head"><div><p class="panel-kicker">INFRASTRUCTURE / STORAGE HEALTH</p><h3>Physical Storage Health Center</h3><p>Multi-drive SMART diagnostics, temperature, sector integrity, lifecycle and filesystem mapping from ANASTUDIO.</p></div><span id="storageHealthState" class="backend-state">WAITING FOR COLLECTOR</span></div>
-        <div class="storage-health-summary">
-          <article class="panel sh-summary-card"><span>PHYSICAL DRIVES</span><strong id="shDriveCount">0</strong><small>Detected hardware</small></article>
-          <article class="panel sh-summary-card healthy"><span>HEALTHY</span><strong id="shHealthyCount">0</strong><small>Normal SMART state</small></article>
-          <article class="panel sh-summary-card warning"><span>WARNING</span><strong id="shWarningCount">0</strong><small>Needs attention</small></article>
-          <article class="panel sh-summary-card critical"><span>CRITICAL</span><strong id="shCriticalCount">0</strong><small>Immediate action</small></article>
+      <section id="storage-health" class="dashboard-section storage-health-console sh-vast">
+        <div class="section-head storage-health-head"><div><p class="panel-kicker">INFRASTRUCTURE / STORAGE HEALTH</p><h3>Storage Health</h3><p>Physical disk capacity, SMART integrity, lifecycle, filesystem usage and actionable diagnostics.</p></div><span id="storageHealthState" class="backend-state">CONNECTING</span></div>
+        <div class="sh-vast-tabs"><span class="active">Overview</span><span>Physical Drives</span><span>SMART Details</span><span>Filesystem</span><span>Diagnostics</span></div>
+        <div class="sh-vast-top">
+          <article class="panel sh-vast-card" id="shCapacityPanel"></article>
+          <article class="panel sh-vast-card" id="shHealthPanel"></article>
+          <article class="panel sh-vast-card" id="shInventoryPanel"></article>
         </div>
-        <div id="storageHealthPresentation"></div>
-        <article id="storageDiagnosticCenter" class="panel sh-diagnostic-center"><div class="empty-state large-empty"><b>Waiting for diagnostics.</b><span>Recommended actions will be generated from live SMART telemetry.</span></div></article>
-        <article class="panel sh-fleet-banner"><div><p class="panel-kicker">DRIVE FLEET</p><h3>Physical Drive Inventory</h3><p>Drive identity is tracked by serial/WWN when available; /dev/sdX is treated as the current Linux device name.</p></div><div><span>LAST CHECK</span><b id="shLastCheck">—</b></div></article>
-        <div id="storageDriveGrid" class="storage-drive-grid"><div class="empty-state large-empty"><b>Waiting for physical drive telemetry.</b><span>Storage Health data will appear after the server collector is upgraded.</span></div></div>
+        <div class="sh-vast-mid">
+          <article class="panel sh-vast-wide" id="shSectorPanel"></article>
+          <article class="panel sh-vast-wide" id="shLifecyclePanel"></article>
+        </div>
+        <article class="panel sh-vast-diagnostics" id="storageDiagnosticCenter"><div class="empty-state large-empty"><b>Waiting for diagnostics.</b></div></article>
+        <div class="sh-vast-bottom">
+          <article class="panel" id="shPhysicalPanel"></article>
+          <article class="panel" id="shFilesystemPanel"></article>
+        </div>
+        <div class="sh-vast-foot"><span>LAST CHECK</span><b id="shLastCheck">—</b></div>
       </section>
 
       <section id="alerts" class="dashboard-section">
