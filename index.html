@@ -298,14 +298,23 @@
       </section>
 
       <section id="storage-health" class="dashboard-section storage-health-console">
-        <div class="section-head storage-health-head"><div><p class="panel-kicker">INFRASTRUCTURE / STORAGE HEALTH</p><h3>Physical Storage Health Center</h3><p>Live SMART telemetry for physical drives, including temperature, sector integrity, lifecycle, identity and filesystem mapping.</p></div><span id="storageHealthState" class="backend-state">WAITING FOR COLLECTOR</span></div>
+        <div class="section-head storage-health-head"><div><p class="panel-kicker">INFRASTRUCTURE / STORAGE HEALTH</p><h3>Physical Storage Health Center</h3><p>Multi-drive SMART diagnostics, temperature, sector integrity, lifecycle and filesystem mapping from ANASTUDIO.</p></div><span id="storageHealthState" class="backend-state">WAITING FOR COLLECTOR</span></div>
         <div class="storage-health-summary">
           <article class="panel sh-summary-card"><span>PHYSICAL DRIVES</span><strong id="shDriveCount">0</strong><small>Detected hardware</small></article>
           <article class="panel sh-summary-card healthy"><span>HEALTHY</span><strong id="shHealthyCount">0</strong><small>Normal SMART state</small></article>
           <article class="panel sh-summary-card warning"><span>WARNING</span><strong id="shWarningCount">0</strong><small>Needs attention</small></article>
           <article class="panel sh-summary-card critical"><span>CRITICAL</span><strong id="shCriticalCount">0</strong><small>Immediate action</small></article>
         </div>
-        <article class="panel sh-fleet-banner"><div><p class="panel-kicker">DRIVE FLEET</p><h3>Physical Drive Inventory</h3><p>Hardware identity is tracked by serial/WWN while Linux device paths and mounted filesystems are mapped live.</p></div><div><span>LAST CHECK</span><b id="shLastCheck">—</b></div></article>
+        <article class="panel sh-presentation">
+          <div class="sh-presentation-head"><div><p class="panel-kicker">HEALTH PRESENTATION</p><h3>Overall Physical Storage Condition</h3><p>Live interpretation of SMART health, temperature and sector integrity.</p></div><span id="shOverallBadge" class="drive-health-status unknown">UNKNOWN</span></div>
+          <div class="sh-presentation-body">
+            <div class="sh-health-orb-wrap"><div id="shHealthOrb" class="sh-health-orb unknown"><div class="sh-orb-icon">!</div><strong id="shOverallState">UNKNOWN</strong><span>STORAGE STATE</span></div></div>
+            <div class="sh-primary-drive"><span class="sh-label">PRIMARY PHYSICAL DRIVE</span><h3 id="shPrimaryModel">Waiting for telemetry</h3><p id="shPrimaryMeta">—</p><div class="sh-primary-stats"><div><span>SMART</span><b id="shPrimarySmart">—</b></div><div><span>TEMPERATURE</span><b id="shPrimaryTemp">—</b></div><div><span>POWER ON</span><b id="shPrimaryPower">—</b></div></div></div>
+            <div class="sh-finding"><span class="sh-label">HEALTH FINDING</span><div id="shFindingIcon" class="sh-finding-icon">!</div><strong id="shFindingTitle">Waiting for storage health data</strong><p id="shFindingText">The collector will summarize the most important physical-drive condition here.</p></div>
+          </div>
+          <div class="sh-integrity"><div class="sh-integrity-title"><span class="sh-label">SECTOR INTEGRITY</span><small>Raw SMART counters — not a synthetic health score</small></div><div id="shIntegrityRows" class="sh-integrity-rows"><div class="sh-integrity-empty">Waiting for drive telemetry…</div></div></div>
+        </article>
+        <article class="panel sh-fleet-banner"><div><p class="panel-kicker">DRIVE FLEET</p><h3>Physical Drive Inventory</h3><p>Drive identity is tracked by serial/WWN when available; /dev/sdX is treated as the current Linux device name.</p></div><div><span>LAST CHECK</span><b id="shLastCheck">—</b></div></article>
         <div id="storageDriveGrid" class="storage-drive-grid"><div class="empty-state large-empty"><b>Waiting for physical drive telemetry.</b><span>Storage Health data will appear after the server collector is upgraded.</span></div></div>
       </section>
 
